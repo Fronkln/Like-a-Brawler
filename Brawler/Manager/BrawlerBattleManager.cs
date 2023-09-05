@@ -300,6 +300,7 @@ namespace Brawler
             SoundManager.LoadCuesheet((SoundCuesheetID)5603); //bbg_z (bbg_brawler_btled part 2)
             SoundManager.LoadCuesheet((SoundCuesheetID)5596); //bbg_k (battle themes that replace repetitive ones)
             SoundManager.LoadCuesheet((SoundCuesheetID)2546); //act_player
+            SoundManager.LoadCuesheet((SoundCuesheetID)5657); //y7b_common
 
             EffectEventManager.LoadScreen(3); //ogref_bact
 
