@@ -321,6 +321,10 @@ namespace Brawler
                     case BattleControlType.boss_tiger:
                         ai = new EnemyAITiger();
                         break;
+
+                    case BattleControlType.boss_tendo:
+                        ai = new EnemyAITendo();
+                        break;
                 }
             }
 

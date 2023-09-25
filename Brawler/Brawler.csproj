@@ -121,6 +121,7 @@
     <Compile Include="Enemy\Boss\EnemyAIBossGenericWPY.cs" />
     <Compile Include="Enemy\Boss\EnemyAIMabuchi.cs" />
     <Compile Include="Enemy\Boss\EnemyAINanba.cs" />
+    <Compile Include="Enemy\Boss\EnemyAITendo.cs" />
     <Compile Include="Enemy\Boss\EnemyAITiger.cs" />
     <Compile Include="Enemy\EnemyAIHook.cs" />
     <Compile Include="Enemy\Boss\EnemyAIIshioda.cs" />
