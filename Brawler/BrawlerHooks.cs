@@ -199,7 +199,7 @@ namespace Brawler
             // DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x140A400A0, new byte[] { 0x48, 0x8D, 0x15, 0x8C, 0xC6, 0x7B, 0x01 });
 
             //COMBAT: Prevent non-functional stun escape prompt from stuttering the game
-            //on the extremely rare chance that we get Y6 wallbound/JE stunned
+            //on the extremely rare chance that we get Y6 wallbound/stunned
             DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x1406F4AAB, 5);
 
             //COMBAT: Remove pausing block
@@ -368,11 +368,15 @@ namespace Brawler
             }
         }
 
+        //You stupid motherfucker, this caused the platforming bug on chapter 7
         private static HijackedGuardFunc _npcGuardDeleg;
         private static HijackedGuardFunc _npcGuardTrampoline;
         private static bool HijackedGuardFunct(IntPtr fighterPtr)
         {
-            return true;
+            if (BrawlerBattleManager.Kasuga.IsValid())
+                return true;
+            else
+                return _npcGuardTrampoline(fighterPtr);
         }
 
         private static UICalcHealthGaugeWidth _calcHpDeleg;
