@@ -128,7 +128,7 @@ namespace Brawler
 
 
                 //always prioritize last hit enemy during a combo to make landing combos easier.
-                if (AttackSimulator.PlayerInstance.Attacking() && AttackSimulator.PlayerInstance.LastEnemyHitCurrentCombo != null)
+                if (AttackSimulator.PlayerInstance.Attacking() && AttackSimulator.PlayerInstance.LastEnemyHitCurrentCombo.IsValid())
                 {
                     EnemyAI ai = EnemyManager.GetAI(AttackSimulator.PlayerInstance.LastEnemyHitCurrentCombo);
 
@@ -175,6 +175,9 @@ namespace Brawler
 
         public static bool CanPickupWeapon()
         {
+            if (BattleTurnManager.CurrentPhase != BattleTurnManager.TurnPhase.Action)
+                return false;
+
             if(BrawlerBattleManager.Kasuga.IsValid() && !BrawlerBattleManager.Kasuga.GetWeapon(AttachmentCombinationID.right_weapon).Unit.IsValid())
             {
                 bool pressed = ModInput.JustPressed(AttackInputID.Grab);
@@ -483,7 +486,7 @@ namespace Brawler
 
         public static void OnEXCancel()
         {
-            AttackSimulator.PlayerInstance.LastEnemyHitCurrentCombo = null;
+            AttackSimulator.PlayerInstance.LastEnemyHitCurrentCombo = new Fighter();
             AttackSimulator.PlayerInstance.m_attacking = false;
             AttackSimulator.PlayerInstance.CurrentAttack = null;
             AttackSimulator.PlayerInstance.Stop();
@@ -698,9 +701,6 @@ namespace Brawler
 
         public static void OnGetHit(Fighter enemy, BattleDamageInfoSafe dmg)
         {
-            if (IsEXGamer)
-                return;
-
             bool wasGuarded = dmg.IsGuard || dmg.IsJustGuard;
 
             if (!wasGuarded)

@@ -55,7 +55,7 @@ namespace Brawler
         public static void Hook()
         {
             m_playBgmDelegate = new SoundManagerPlayBGM(PlayBGMHook);
-            MinHookHelper.createHook((IntPtr)0x1411C7DB0, m_playBgmDelegate, out m_playBgmTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("44 89 4C 24 20 44 89 44 24 18 89 54 24 10 48 89 4C 24 08 53 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 48 C7 44 24 58 ? ? ? ?"), m_playBgmDelegate, out m_playBgmTrampoline);
         }
 
         private static uint m_lastCombatMusic;
@@ -119,10 +119,7 @@ namespace Brawler
         {
             //Tough random encounter: The Myth
             if (BattleProperty.BattleConfigID == 2 && BrawlerBattleManager.Enemies[0].GetStatus().Level > Player.GetLevel(Player.ID.kasuga))
-            {
-                DragonEngine.Log("The Myth!");
                 return 0x15DA0003;
-            }
 
             switch (m_lastCombatMusic)
             {
@@ -143,7 +140,7 @@ namespace Brawler
         private static uint DecideKamurochoEncounterTheme()
         {
 
-            if (BrawlerBattleManager.IsEncounter)
+            if (BattleProperty.BattleConfigID == 2)
             {
                 //Kamurocho 1999: Push Me Under Water
                 if (SceneService.GetSceneInfo().ScenePlay.Get().StageID == StageID.st_kamuro_yazawa_past)
@@ -160,7 +157,13 @@ namespace Brawler
 
         private static uint DecideOmiEncounterTheme()
         {
-            return 0x15DC0001;
+            if(BattleProperty.BattleConfigID == 106)
+            {
+                //Un altro appassionato
+                return 0x15DC0001;
+            }
+
+            return 0x11B8000D;
         }
     }
 }

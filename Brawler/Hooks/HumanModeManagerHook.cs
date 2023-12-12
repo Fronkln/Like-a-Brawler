@@ -19,7 +19,7 @@ namespace Brawler
         {
             _humanModeTransitPickupDeleg = new HumanModeManagerTransitExecPickup(HumanModeManager_TransitExecPickup);
 
-            MinHookHelper.createHook((IntPtr)0x1406ED4A0, _humanModeTransitPickupDeleg, out _humanModeTransitDmgPickupTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 89 5C 24 08 48 89 6C 24 18 48 89 74 24 20 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 8B F9"), _humanModeTransitPickupDeleg, out _humanModeTransitDmgPickupTrampoline);
         }
 
         private static HumanModeManagerTransitExecPickup _humanModeTransitPickupDeleg;

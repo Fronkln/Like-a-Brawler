@@ -31,10 +31,10 @@ namespace Brawler
             _camFreeUpdateTargetDeleg = new CameraFreeUpdateTarget(CameraFree_UpdateTarget);
             _camFreeUpdateDeleg = new CameraFreeUpdate(CameraFree_Update);
 
-            MinHookHelper.createHook((IntPtr)0x140795130, _camFreeAllowInputDeleg, out  _camFreeAllowInputTrampoline);
-            MinHookHelper.createHook((IntPtr)0x140766910, _camFreeUpdateTargetDeleg, out _camFreeUpdateTargetTrampoline);
-           // MinHookHelper.createHook((IntPtr)0x14075AA00, _camFreeGetLookatDeleg, out _camFreeGetLookatTrampoline);
-            MinHookHelper.createHook((IntPtr)0x140757220, _camFreeUpdateDeleg, out _camFreeUpdateTrampoline);
+            //Warning: peepeepoopoo pattern
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("B8 ? ? ? ? C3 CC CC CC CC CC CC CC CC CC CC 33 C0 C3 CC CC CC CC CC CC CC CC CC CC CC CC CC B8 ? ? ? ? C3 CC CC CC CC CC CC CC CC CC CC 33 C0 C3 CC CC CC CC CC CC CC CC CC CC CC CC CC 0F B6 81 2F 05 00 00"), _camFreeAllowInputDeleg, out _camFreeAllowInputTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 55 56 57 48 8D 6C 24 E0"), _camFreeUpdateTargetDeleg, out _camFreeUpdateTargetTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 8B C4 56 57 41 56 48 83 EC ? 48 C7 40 A8 ? ? ? ? 48 89 58 10 48 89 68 18 C5 F8 29 70 D8 48 8B F1"), _camFreeUpdateDeleg, out _camFreeUpdateTrampoline);
         }
 
         //Dont allow movement when we are in battle finishing sequence.
@@ -73,7 +73,7 @@ namespace Brawler
             BattleTurnManager.TurnPhase phase = BattleTurnManager.CurrentPhase;
             uint* targetPtr = (uint*)((camera.ToInt64()) + 0x268);
 
-            if(BrawlerBattleManager.Kasuga.IsValid())
+            if (BrawlerBattleManager.Kasuga.IsValid())
             {
                 if (phase == BattleTurnManager.TurnPhase.Cleanup || phase == BattleTurnManager.TurnPhase.End)
                 {
@@ -99,7 +99,9 @@ namespace Brawler
                     *targetPtr = BrawlerBattleManager.KasugaChara.UID;
             }
             else
+            {
                 *targetPtr = BrawlerBattleManager.KasugaChara.UID;
+            }
 
              _camFreeUpdateTrampoline(camera);
         }

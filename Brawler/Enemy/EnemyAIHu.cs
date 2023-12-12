@@ -15,10 +15,7 @@ namespace Brawler
         {
             base.Start();
 
-            m_Zheng = BrawlerBattleManager.Enemies.FirstOrDefault(x => x.Character.Attributes.enemy_id == BattleRPGEnemyID.yazawa_boss_tei_c03);
-           
-            if (m_Zheng == null)
-                m_Zheng = new Fighter((IntPtr)0);
+            m_Zheng = BrawlerBattleManager.Enemies.FirstOrDefault(x => x.Character.Attributes.enemy_id == BattleRPGEnemyID.yazawa_boss_tei_c03);   
         }
 
         public override void OnStartAttack()

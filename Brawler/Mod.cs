@@ -105,7 +105,7 @@ namespace Brawler
                     status.SetHPMax(Player.GetHPMax(Player.ID.kasuga));
                     status.SetHPCurrent(Player.GetHPNow(Player.ID.kasuga));
                 }
-               // return;
+                return;
             }
 
             ModInput.GameUpdate();
@@ -169,6 +169,7 @@ namespace Brawler
 
         public override void OnModInit()
         {
+
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 

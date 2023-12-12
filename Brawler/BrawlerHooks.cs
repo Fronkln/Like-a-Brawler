@@ -108,7 +108,6 @@ namespace Brawler
 
         public unsafe static void Init()
         {
-            _inputStateDeleg = new GetCurrentInputState(GetInputState);
             _kamaeDeleg = new HumanModeManagerIsInputKamae(HumanModeManager_IsInputKamae);
             _swayDeleg = new HumanModeManagerIsInputKamae(HumanModeManager_IsInputSway);
             _pickupDeleg = new HumanModeManagerIsInputKamae(HumanModeManager_IsInputPickup);
@@ -141,37 +140,39 @@ namespace Brawler
             _pauseReq1Deleg = new PauseManagerRequestPause1(PauseManager_RequestPause1);
             _charaReqStartFighterDeleg = new CharacterRequestStartFighter(Character_Request_Start_Fighter);
 
-            //DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x14094E919, 5);
-
             try
             {
                 MinHookHelper.initialize();
             }
             catch { }
 
-            MinHookHelper.createHook((IntPtr)0x1406D7BE0, _kamaeDeleg, out _kamaeTrampoline);
-           // MinHookHelper.createHook((IntPtr)0x1406D7B90, _swayDeleg, out _swayTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1406D8A50, _pickupDeleg, out _pickupTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1404D2B10, _btlTurnManagerDmgNotifyDeleg, out _btlTurnManagerDmgNotifyTrampoline);
-            MinHookHelper.createHook((IntPtr)0x140FF0ED0, _btlTurnManagerRequestShowMissDeleg, out _btlTurnManagerDmgRequestShowMissTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1404DDEF0, _btlTurnManagerRequestWarpFighterDeleg, out _btlTurnManagerRequestWarpFighterTrampoline);
-           
-            MinHookHelper.createHook((IntPtr)0x1404C9850, _btlTurnManagerChangeActionStepDeleg, out _btlTurnManagerChangeActionStepTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1407E2B20, _ecRenderCharacterBattleTransformOnDeleg, out _ecRenderCharacterBattleTransformOnTrampoline);
-            MinHookHelper.createHook((IntPtr)0x140944EE0, _justCounterValidEventDeleg, out _justCounterValidEventTrampoline);
-            MinHookHelper.createHook((IntPtr)0x157A9E640, _dropPlayDeleg, out _dropPlayTrampoline);
-            //    MinHookHelper.createHook((IntPtr)0x1406EB940, _btlStartReqMotDeleg, out _btlStartReqMotTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1409AB480, _btlStartManagerIsDelayTransformDeleg, out _btlStartManagerIsDelayTransformTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1406E1490, _fighterModeDamageRequestMotionDeleg, out _fighterModeDamageRequestMotionTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1406DE9F0, _humanModeTransitDamageDeleg, out _humanModeTransitDamageTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1406E24C0, _fighterModeHumanDamageIsDownDeleg, out _fighterModeHumanDamageIsDownTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1406F22D0, _humanModeTransitDmgCounterDeleg, out _humanModeTransitDmgCounterTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1406F2890, _humanModeTransitDmgSwayDeleg, out _humanModeTransitDmgSwayTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1406DE870, _damageExecValidDeleg, out _damageExecValidTrampoline);
-         //   MinHookHelper.createHook((IntPtr)0x1404D5920, _execPhaseCleanupDeleg, out _execPhaseCleanupTrampoline);
-            MinHookHelper.createHook((IntPtr)0x140795190, _cameraFreeIsRotateBehindDeleg, out _cameraFreeIsRotateBehindTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 83 EC ? 48 8B 05 ? ? ? ? 80 B8 58 02 00 00 ? 74 ? 48 83 C1 ?"), _kamaeDeleg, out _kamaeTrampoline);
 
-            MinHookHelper.createHook((IntPtr)0x140527390, _charaReqStartFighterDeleg, out _charaReqStartFighterTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 83 EC ? 48 83 C1 ? E8 ? ? ? ? 0F B6 80 AC 00 00 00"), _pickupDeleg, out _pickupTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 56 57 48 83 EC ? 48 8B 02"), _btlTurnManagerDmgNotifyDeleg, out _btlTurnManagerDmgNotifyTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 89 5C 24 08 57 48 83 EC ? 48 8B F9 48 8B DA 48 8B CA E8 ? ? ? ? 84 C0 75 ? 4C 8B CB"), _btlTurnManagerRequestShowMissDeleg, out _btlTurnManagerDmgRequestShowMissTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 89 5C 24 08 57 48 83 EC ? 48 8B 0D ? ? ? ? 49 8B D8"), _btlTurnManagerRequestWarpFighterDeleg, out _btlTurnManagerRequestWarpFighterTrampoline);
+
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 8B C4 55 41 54 41 55 41 56 41 57 48 8D A8 78 FE FF FF 48 81 EC ? ? ? ? 48 C7 45 30 ? ? ? ?"), _btlTurnManagerChangeActionStepDeleg, out _btlTurnManagerChangeActionStepTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.ReadCall(DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? 8B 43 14 89 45 A7")), _ecRenderCharacterBattleTransformOnDeleg, out _ecRenderCharacterBattleTransformOnTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 89 5C 24 08 57 48 83 EC ? 48 8B 4A 08 48 8B DA"), _justCounterValidEventDeleg, out _justCounterValidEventTrampoline);
+
+
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 89 5C 24 08 48 89 74 24 10 57 48 83 EC ? 83 79 50 ?"), _btlStartManagerIsDelayTransformDeleg, out _btlStartManagerIsDelayTransformTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 89 5C 24 18 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 80 00 00 00 8B FA"), _fighterModeDamageRequestMotionDeleg, out _fighterModeDamageRequestMotionTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 8B C4 55 57 41 54 41 56 41 57 48 8D A8 F8 F6 FF FF"), _humanModeTransitDamageDeleg, out _humanModeTransitDamageTrampoline);
+
+            long* damageVfTable = (long*)DragonEngineLibrary.Unsafe.CPP.ResolveRelativeAddress(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 8D 05 ? ? ? ? 48 89 03 48 8D 05 ? ? ? ? 48 89 43 18 C5 C1 EF FF"), 7);
+            MinHookHelper.createHook((IntPtr)damageVfTable[26], _fighterModeHumanDamageIsDownDeleg, out _fighterModeHumanDamageIsDownTrampoline);
+
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 8B C4 55 57 41 56 48 8D A8 18 FF FF FF 48 81 EC ? ? ? ? 48 C7 44 24 48 ? ? ? ?"), _humanModeTransitDmgCounterDeleg, out _humanModeTransitDmgCounterTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 57 48 83 EC ? 48 C7 44 24 20 ? ? ? ? 48 89 5C 24 48 48 89 74 24 58 48 8B F2 48 8B F9 48 83 C1 ?"), _humanModeTransitDmgSwayDeleg, out _humanModeTransitDmgSwayTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 56 57 41 56 41 57"), _damageExecValidDeleg, out _damageExecValidTrampoline);
+
+            long* camFreeVfTable = (long*)DragonEngineLibrary.Unsafe.CPP.ResolveRelativeAddress(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 8D 05 ? ? ? ? 48 89 07 48 8D B7 60 02 00 00"), 7);
+            MinHookHelper.createHook((IntPtr)damageVfTable[79], _cameraFreeIsRotateBehindDeleg, out _cameraFreeIsRotateBehindTrampoline);
+
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 57 48 83 EC ? 48 C7 44 24 20 ? ? ? ? 48 89 5C 24 70 48 89 74 24 78 48 8B F9 48 8D 99 20 4B 00 00"), _charaReqStartFighterDeleg, out _charaReqStartFighterTrampoline);
 
             CameraHooks.Hook();
             BattleStartManager.Hook();
@@ -184,92 +185,73 @@ namespace Brawler
             BattleMusic.Hook();
 
             //SYSTEM: Allow us to change the speed of "Unprocessed" (observed in hacts)
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x141ED0B80, 5);
-
-            //HACT MANAGER: Force the game to allow more than one hact at once
-            //DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x1405E0CD4, new byte[] {0x90, 0x90, 0xEB, 0x30});
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("80 F9 ? 74 ? 0F B6 C1"), 5);
 
             //CAMERA FREE: DISABLE CAMERA TWERKING ON BATTLE/CAMERA LINK OUT
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x141F4461E, 5);
-
-            //COMBAT INPUT (KEYBOARD): Ensure we are always on input state 0x10 to allow movement with keyboard.
-            MinHookHelper.createHook((IntPtr)0x141F48690, _inputStateDeleg, out _inputStateTrampoline);
-
-            //COMBAT AI: Force enemies to leftover Judgement AI (Zako for now, TODO: switch bosses to boss AI)
-            // DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x140A400A0, new byte[] { 0x48, 0x8D, 0x15, 0x8C, 0xC6, 0x7B, 0x01 });
+            //TODO URGENT: Only do this on combat!
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? C5 FC 10 44 24 40 C4 C1 7C 11 87 40 01 00 00"), 5);
 
             //COMBAT: Prevent non-functional stun escape prompt from stuttering the game
             //on the extremely rare chance that we get Y6 wallbound/stunned
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x1406F4AAB, 5);
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 81 C1 ? ? ? ? 44 8D 42 05 E8 ? ? ? ? 48 8D 4B 30 48 83 C4 ?") + 11, 5);
 
             //COMBAT: Remove pausing block
             //TODO: TURN THIS INTO A HOOK FOR FINER CONTROL!
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x1405C5210, new byte[] { 0x31, 0xC0, 0xC3, 0x90 });
+            DragonEngineLibrary.Unsafe.CPP.PatchMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 83 EC ? 48 8B 05 ? ? ? ? 80 B8 58 02 00 00 ? 0F 84 ? ? ? ?"), new byte[] { 0x31, 0xC0, 0xC3, 0x90 });
 
             //COMBAT: Force RPG pause menu instead of generic
-            MinHookHelper.createHook((IntPtr)0x140CBE5B0, _pauseReq1Deleg, out _pauseReq1Trampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 57 41 54 41 55 41 56 41 57 48 83 EC ? 48 C7 44 24 20 ? ? ? ? 48 89 5C 24 68 48 89 6C 24 70 48 89 74 24 78 45 8B F9 4D 8B E0"), _pauseReq1Deleg, out _pauseReq1Trampoline);
 
             //COMBAT: Allow keyboard to be able to pause
-            MinHookHelper.createHook((IntPtr)0x14170E090, _pauseBtnDeleg, out _pauseBtnTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 89 5C 24 08 48 89 74 24 10 57 48 83 EC ? 41 8B C0 8B FA"), _pauseBtnDeleg, out _pauseBtnTrampoline);
 
             //COMBAT: Prevent code that forces the enemy to get up when its their turn
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x1404D9382, 6);
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x1404CB7A6, new byte[] {0x90, 0x90, 0xEB});
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("FF 97 A8 01 00 00 49 8B CE E8 ? ? ? ? 84 C0"), 6);
+            DragonEngineLibrary.Unsafe.CPP.PatchMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("84 C0 74 ? 49 8B 06 48 8B 98 28 4B 00 00 48 8B 3B"), new byte[] { 0x90, 0x90, 0xEB });
 
             //COMBAT (RANGE): Disable filtering for cec_hact
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x14062500D, 2);
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x140625076, 6);
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x140624F7A, new byte[] { 0xE9, 0x87, 0x0, 0x0, 0x0, 0x90 });
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x140624F73, 7);
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("74 ? C5 E9 EF D2 C5 FA 11 54 24 40"), 2);
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("0F 84 ? ? ? ? 48 8D 54 24 40 48 8B CF E8 ? ? ? ? 8D 43 FF"), 6);
+            DragonEngineLibrary.Unsafe.CPP.PatchMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("0F 84 ? ? ? ? 8D 4B FF 48 69 C1 ? ? ? ?"), new byte[] { 0xE9, 0x87, 0x0, 0x0, 0x0, 0x90 });
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("85 94 87 E0 00 00 00"), 7);
 
             //COMBAT: Prevent Ishioda from getting stunned when he is thrown from the crane truck.
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x14025E47E, 5);
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? C5 F9 EF C0 C5 FA 7F 45 E8 48 8D 05 ? ? ? ? 48 89 45 D8 48 8D 55 D8"), 5);
 
             //COMBAT: Prevent the game from re-applying stun effects on Ishioda
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x14024FBE0, 5);
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("45 33 C9 4C 8D 44 24 60 BA ? ? ? ?") + 13, 5);
 
             //COMBAT: Allow Ishioda to attack instead of forcing "defense command" on him which prevents him from doing so.
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x14025ABC0, new byte[] {0xB8, 0x0, 0x0, 0x0, 0x0, 0xC3});
-
-            //COMBAT: Ensuring smoother combat transitions by removing the battle end fade.
-            //DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x1404C84C9, 5);
-
-            //JUDGMENT UI GAUGE: Replace the Judgment check with Yazawa (YLAD)
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x1410E4C8C, new byte[] { 0x7 });
-
-            //JUDGMENT UI GAUGE: Create fake function at the address because MinHook believes it isnt a valid one.
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x1411F45C0, new byte[] { 0xB0, 0x01, 0xC3 });
-            MinHookHelper.createHook((IntPtr)0x1411F45C0, _calcHpDeleg, out _calcHpTrampoline);
+            DragonEngineLibrary.Unsafe.CPP.PatchMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 89 5C 24 10 57 48 83 EC ? 48 8B F9 48 8B DA 48 8B 49 08 E8 ? ? ? ? 48 8B C8 E8 ? ? ? ? 48 8B CB 48 8B 90 80 0F 00 00"), new byte[] { 0xB8, 0x0, 0x0, 0x0, 0x0, 0xC3 });
 
             //GUARDING: Swap condition, player will have its humanmode checked. Enemies will use a hijacked function
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x157B1E062, 0x75);
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x157B1E07B, 0xE8, 0x40, 0x00, 0x46, 0xE9); //call hijacked func
+            DragonEngineLibrary.Unsafe.CPP.PatchMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? 48 8B 88 98 0F 00 00 48 85 C9 74 ? 83 B9 C0 00 00 00 ? 75 ? 48 8B 03") - 25, 0x75);
+            IntPtr funcLoc = DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? 48 8B 88 98 0F 00 00 48 85 C9 74 ? 83 B9 C0 00 00 00 ? 75 ? 48 8B 03");
+            IntPtr targetFunc = DragonEngineLibrary.Unsafe.CPP.ReadCall(DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? 48 8B 43 28 48 8B B8 F0 03 00 00 48 8B CF E8 ? ? ? ? C4 E3 79 04 83 80 00 00 00 ?"));
+            DragonEngineLibrary.Unsafe.CPP.InjectHook(funcLoc, targetFunc);
 
             //CRANE TRUCK: prevent teleportation
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x140256BCF, 5);
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x140257156, 5);
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? C5 F8 28 7C 24 70 C5 F8 28 B4 24 80 00 00 00 48 8B BC 24 B0 00 00 00"), 5);
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? C5 F8 28 7C 24 70 C5 F8 28 B4 24 80 00 00 00 48 8B 4C 24 60 48 33 CC E8 ? ? ? ? 48 8B 9C 24 B0 00 00 00"), 5);
 
-            //HUMANMODEMANAGER: Disable hardcoded any hardcoded counters. Our AI will take care of it.
-            //    DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x1406F22D0, new byte[] { 0xB0, 0x00, 0xC3 });
-
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x157B1E080, 7);
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x157B1E087, 0x84, 0xC0, 0x90);
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x157B1E08C, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x74); ;
-            MinHookHelper.createHook((IntPtr)0x140F7E0C0, _npcGuardDeleg, out _npcGuardTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1406F2E90, _guardReactionIDDeleg, out _guardReactionIDTrampoline);
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 8B 88 98 0F 00 00 48 85 C9 74 ? 83 B9 C0 00 00 00 ? 75 ? 48 8B 03"), 7);
+            DragonEngineLibrary.Unsafe.CPP.PatchMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 85 C9 74 ? 83 B9 C0 00 00 00 ? 75 ? 48 8B 03"), 0x84, 0xC0, 0x90);
+            DragonEngineLibrary.Unsafe.CPP.PatchMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("83 B9 C0 00 00 00 ? 75 ? 48 8B 03"), 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x74);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 57 48 83 EC ? 48 C7 44 24 20 ? ? ? ? 48 89 5C 24 58 48 89 6C 24 60 48 89 74 24 68 48 8B F1 E8 ? ? ? ? 48 8B 46 28 48 8B B8 F0 03 00 00 48 8D 05 ? ? ? ? 48 89 44 24 28 33 ED 89 6C 24 30 48 8D 9F 08 06 00 00 48 89 5C 24 50 48 8B CB E8 ? ? ? ? 90 8D 4D 30 E8 ? ? ? ? 48 89 44 24 50 48 85 C0 74 ? 48 8D 0D ? ? ? ? 48 89 08 48 89 70 08 C5 F8 10 44 24 28 C5 F8 11 40 10 8B 48 18 48 85 C9 75 ? 48 89 68 18 48 89 68 20 48 89 68 28 EB ? 48 8B C5 48 83 BF F8 05 00 00 ? 75 ? 48 89 87 00 06 00 00 48 89 68 28 48 89 68 20 48 89 87 F8 05 00 00 48 8B 87 00 06 00 00 EB ? 48 8B 8F 00 06 00 00 48 89 41 28 48 8B 8F 00 06 00 00 48 89 48 20 48 89 68 28 48 89 87 00 06 00 00 48 8B 8F 10 06 00 00 48 39 48 20 75 ? 48 89 87 18 06 00 00 48 8B CB E8 ? ? ? ? 90 C6 86 98 00 00 00 ?"), _npcGuardDeleg, out _npcGuardTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 8B C4 55 41 54 41 55 41 56 41 57 48 8D 68 A1 48 81 EC ? ? ? ? 48 C7 45 DF ? ? ? ? 48 89 58 10 48 89 70 18 48 89 78 20 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 27 4C 8B F9"), _guardReactionIDDeleg, out _guardReactionIDTrampoline);
 
             //COMBAT: Remove teleportation of player after combat ends
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x1404CD190, 0xC3);
+            DragonEngineLibrary.Unsafe.CPP.PatchMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 89 5C 24 10 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 60 48 8B F9 48 8B 0D ? ? ? ?"), 0xC3);
 
             //COMBAT: Force shift input on swaying (aka face enemy while quickstepping) (includes enemies)
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x1406F7690, 0xB0, 0x01, 0xC3);
+            DragonEngineLibrary.Unsafe.CPP.PatchMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 83 EC ? 48 83 C1 ? E8 ? ? ? ? 0F B6 80 AE 00 00 00"), 0xB0, 0x01, 0xC3);
 
             //COMBAT: Disable perfect guard
-            DragonEngineLibrary.Unsafe.CPP.NopMemory((IntPtr)0x140944E8E, 2);
-            DragonEngineLibrary.Unsafe.CPP.PatchMemory((IntPtr)0x140944E90, 0xEB);
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("84 C0 74 ? B0 ? 48 83 C4 ? C3 32 C0 48 83 C4 ? C3 48 8B 02"), 2);
+            DragonEngineLibrary.Unsafe.CPP.PatchMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("74 ? B0 ? 48 83 C4 ? C3 32 C0 48 83 C4 ? C3 48 8B 02"), 0xEB);
 
             //COMBAT EFFECT: Use our own custom pibs
-            MinHookHelper.createHook((IntPtr)0x141613190, _ptcManPlayDeleg, out _ptcManPlayTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 8B C4 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 48 C7 40 C0 ? ? ? ?"), _ptcManPlayDeleg, out _ptcManPlayTrampoline);
 
 
             MinHookHelper.enableAllHook();
@@ -320,14 +302,6 @@ namespace Brawler
             _pauseReq1Trampoline(mng, pauseID, param, focus, slot);
 ;        }
 
-
-        private static GetCurrentInputState _inputStateDeleg;
-        private static GetCurrentInputState _inputStateTrampoline;
-        private static uint GetInputState(IntPtr obj)
-        {
-            return _inputStateTrampoline(obj);
-        }
-
         private static GuardReactionSetMotionID _guardReactionIDDeleg;
         private static GuardReactionSetMotionID _guardReactionIDTrampoline;
         private unsafe static void GuardReaction_SetMotionID(IntPtr guardReactionObj)
@@ -369,6 +343,7 @@ namespace Brawler
         }
 
         //You stupid motherfucker, this caused the platforming bug on chapter 7
+        //...but it's fixed now!
         private static HijackedGuardFunc _npcGuardDeleg;
         private static HijackedGuardFunc _npcGuardTrampoline;
         private static bool HijackedGuardFunct(IntPtr fighterPtr)

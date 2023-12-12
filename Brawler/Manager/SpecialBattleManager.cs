@@ -29,7 +29,7 @@ namespace Brawler
                         if (machinery.Count() > 0)
                             BrawlerBattleManager.DisableTargetingOnce = true;
 
-                        if (enemies.FirstOrDefault(x => x.Character.Attributes.soldier_data_id == CharacterNPCSoldierPersonalDataID.yazawa_btl02_0010_000_1) != null)
+                        if (enemies.FirstOrDefault(x => x.Character.Attributes.soldier_data_id == CharacterNPCSoldierPersonalDataID.yazawa_btl02_0010_000_1).IsValid())
                         {
                             BrawlerBattleManager.KasugaChara.GetRender().Reload((CharacterID)0x3DB7, 0x1);
                         }
@@ -44,7 +44,6 @@ namespace Brawler
 
         private static void Tutorial01()
         {
-            return;
             int m_blockCount = 0;
 
             //Testing

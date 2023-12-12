@@ -9,7 +9,7 @@ namespace Brawler
     {
         public static Dictionary<uint, EnemyAI> EnemyAIs = new Dictionary<uint, EnemyAI>();
 
-        internal static Fighter _OverrideNextAttackerOnce = null;
+        internal static Fighter _OverrideNextAttackerOnce = new Fighter();
 
 
         //CALLBACK STUFF
@@ -73,7 +73,7 @@ namespace Brawler
 
         public static EnemyAI GetAI(Fighter enemy)
         {
-            if (enemy == null || !enemy.IsValid() || !EnemyAIs.ContainsKey(enemy.Character.UID))
+            if (!enemy.IsValid() || !EnemyAIs.ContainsKey(enemy.Character.UID))
                 return null;
             return EnemyAIs[enemy.Character.UID];
         }
@@ -81,6 +81,10 @@ namespace Brawler
         public static void Update()
         {
             if (BrawlerBattleManager.Enemies.Length <= 0 && BattleTurnManager.CurrentPhase >= BattleTurnManager.TurnPhase.Action)
+                return;
+
+            BattleTurnManager.TurnPhase curPhase = BattleTurnManager.CurrentPhase;
+            if (curPhase == BattleTurnManager.TurnPhase.Start || curPhase == BattleTurnManager.TurnPhase.StartWait)
                 return;
 
             UpdateCallback();
@@ -108,7 +112,8 @@ namespace Brawler
 
             foreach (var kv in EnemyAIs)
             {
-                kv.Value.Update();
+                if(!BrawlerBattleManager.HActIsPlaying)
+                    kv.Value.Update();
 
                 if (kv.Value.Character == BrawlerBattleManager.CurrentAttacker)
                 {
@@ -130,17 +135,17 @@ namespace Brawler
                 return FighterManager.GetFighter(0);
 
             if (!FighterManager.IsBrawlerMode() || Debug.DontEraseRPGUI)
-                return null;
+                return new Fighter();
 
-            if(_OverrideNextAttackerOnce != null)
+            if(_OverrideNextAttackerOnce.IsValid())
             {
                 Fighter attacker = _OverrideNextAttackerOnce;
-                _OverrideNextAttackerOnce = null;
+                _OverrideNextAttackerOnce = new Fighter();
 
                 return attacker;
             }
 
-            Fighter chosenEnemy = null;
+            Fighter chosenEnemy = new Fighter();
             Fighter[] allEnemies = FighterManager.GetAllEnemies().Where(x => !x.IsDead()).ToArray();
 
             if (allEnemies.Length <= 0)
@@ -171,7 +176,7 @@ namespace Brawler
             else if (BrawlerBattleManager.Enemies.Length == 1)
                 return BrawlerBattleManager.Enemies[0];
 
-            return null;
+            return new Fighter();
         }
 
         private static EnemyAI CreateEnemyAI(Fighter enemy)
@@ -214,6 +219,9 @@ namespace Brawler
 
                 case BattleRPGEnemyID.boss_mabuchi_test:
                     ai = new EnemyAIMabuchi();
+                    break;
+                case BattleRPGEnemyID.yazawa_boss_han:
+                    ai = new EnemyAIHan();
                     break;
             }
 
@@ -325,6 +333,15 @@ namespace Brawler
                     case BattleControlType.boss_tendo:
                         ai = new EnemyAITendo();
                         break;
+
+                    case BattleControlType.boss_jyungi:
+                        ai = new EnemyAIHan();
+                        break;
+
+                    case BattleControlType.jyungi:
+                        ai = new EnemyAIHan();
+                        break;
+
                 }
             }
 

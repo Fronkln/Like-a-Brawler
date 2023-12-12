@@ -107,7 +107,9 @@
   <ItemGroup>
     <Compile Include="Auth\AuthConditionManager.cs" />
     <Compile Include="Auth\AuthCustomNodeManager.cs" />
+    <Compile Include="Auth\AuthNodeBrawlerDrop.cs" />
     <Compile Include="Auth\AuthNodeBrawlerThrow.cs" />
+    <Compile Include="Auth\ConditionFolderDragonBoost.cs" />
     <Compile Include="Auth\AuthNodeTransitEXFollowup.cs" />
     <Compile Include="Auth\ConditionFolderDisableData.cs" />
     <Compile Include="Auth\ConditionFolderPlayerJob.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Enemy\Boss\EnemyAIBossGenericWPG.cs" />
     <Compile Include="Enemy\Boss\EnemyAIBossGenericWPD.cs" />
     <Compile Include="Enemy\Boss\EnemyAIBossGenericWPY.cs" />
+    <Compile Include="Enemy\Boss\EnemyAIHan.cs" />
     <Compile Include="Enemy\Boss\EnemyAIMabuchi.cs" />
     <Compile Include="Enemy\Boss\EnemyAINanba.cs" />
     <Compile Include="Enemy\Boss\EnemyAITendo.cs" />
@@ -129,7 +132,6 @@
     <Compile Include="Enemy\EnemyAIMachinery.cs" />
     <Compile Include="Enemy\Boss\EnemyAISawashiro.cs" />
     <Compile Include="Enemy\EnemyJuggleModule.cs" />
-    <Compile Include="Hooks\AIHooks.cs" />
     <Compile Include="Hooks\AuthHooks.cs" />
     <Compile Include="Hooks\CameraHooks.cs" />
     <Compile Include="Hooks\FighterModeHook.cs" />
@@ -145,7 +147,6 @@
     <Compile Include="BrawlerFighterInfo.cs" />
     <Compile Include="BrawlerGaugeRestore.cs" />
     <Compile Include="BrawlerHooks.cs" />
-    <Compile Include="Manager\EncounterManager.cs" />
     <Compile Include="Manager\HeatActionSimulator.cs" />
     <Compile Include="Manager\RevelationManager.cs" />
     <Compile Include="Manager\SpecialBattleManager.cs" />
@@ -210,7 +211,7 @@
       <Project>{db20a2ca-cffe-4298-9872-269b91b0df9d}</Project>
       <Name>YazawaCommand</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Y7Internal.NET\DELibrary.NET\DELibrary.NET.csproj">
+    <ProjectReference Include="..\Dependencies\Dragon-Engine-.NET\DELibrary.NET\DELibrary.NET.csproj">
       <Project>{9900112c-25d6-427d-846a-a90e31cf8fe3}</Project>
       <Name>DELibrary.NET</Name>
     </ProjectReference>

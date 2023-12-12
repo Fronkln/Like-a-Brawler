@@ -21,7 +21,7 @@ namespace Brawler
         public static void Hook()
         {
             m_decideTypeDelegate = new BattleStartManagerDecideType(DecideTypeHook);
-            MinHookHelper.createHook((IntPtr)0x1409A9BC0, m_decideTypeDelegate, out m_decideTypeTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 89 5C 24 20 55 56 41 56 48 8D 6C 24 B9 48 81 EC ? ? ? ? C5 F8 29 B4 24 C0 00 00 00"), m_decideTypeDelegate, out m_decideTypeTrampoline);
         }
 
         public static void DecideTypeHook(IntPtr manager)
@@ -44,18 +44,6 @@ namespace Brawler
                     BrawlerBattleManager.IsEncounter = false;
 
             }
-
-
-            DragonEngine.Log("we deciding");
-        }
-
-        public unsafe static bool CanSeamless()
-        {
-            void* battleStartManager = *((void**)0x142BC7200);
-
-
-            BattleStartManagerCanSeamless resFunc = (BattleStartManagerCanSeamless)Marshal.GetDelegateForFunctionPointer((IntPtr)0x00000001409ABE10, typeof(BattleStartManagerCanSeamless));
-            return resFunc.Invoke(battleStartManager);
         }
     }
 }

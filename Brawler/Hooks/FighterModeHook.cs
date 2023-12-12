@@ -18,7 +18,7 @@ namespace Brawler
         {
             _pickupMotionIDDeleg = new FighterModePickupGetMotionID(FighterModePickup_GetMotionID);
 
-            MinHookHelper.createHook((IntPtr)0x1406EEA10, _pickupMotionIDDeleg, out _pickupMotionIDTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 89 5C 24 10 48 89 6C 24 18 56 57 41 56 48 83 EC ? 48 8B F1 48 83 C1 ?"), _pickupMotionIDDeleg, out _pickupMotionIDTrampoline);
         }
 
 

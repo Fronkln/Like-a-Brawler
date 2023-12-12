@@ -30,13 +30,13 @@ namespace Brawler
             _execPhaseCleanupDeleg = new BattleTurnManagerExecPhaseCleanup(BattleTurnManager_ExecPhaseCleanup);
             _btlTurnManagerChangePhaseDeleg = new BattleTurnManagerChangePhase(BattleTurnManager_ChangePhase);
 
-            MinHookHelper.createHook((IntPtr)0x1404D5920, _execPhaseCleanupDeleg, out _execPhaseCleanupTrampoline);
-            MinHookHelper.createHook((IntPtr)0x1404C8AE0, _btlTurnManagerChangePhaseDeleg, out _btlTurnManagerChangePhaseTrampoline);
+            MinHookHelper.createHook((IntPtr)DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 55 56 57 41 56 41 57 48 8B EC 48 83 EC ? 48 C7 45 B0 ? ? ? ? 48 89 9C 24 B0 00 00 00 C5 F8 29 74 24 60"), _execPhaseCleanupDeleg, out _execPhaseCleanupTrampoline);
+            MinHookHelper.createHook((IntPtr)DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 55 41 54 41 55 41 56 41 57 48 8D AC 24 D0 EE FF FF"), _btlTurnManagerChangePhaseDeleg, out _btlTurnManagerChangePhaseTrampoline);
         }
 
         public static void TestExec(IntPtr rawPtr)
         {
-            ExecPhaseBattleResult resFunc = (ExecPhaseBattleResult)Marshal.GetDelegateForFunctionPointer((IntPtr)0x1404D6060, typeof(ExecPhaseBattleResult));
+            ExecPhaseBattleResult resFunc = (ExecPhaseBattleResult)Marshal.GetDelegateForFunctionPointer(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 8B C4 57 48 81 EC ? ? ? ? 48 C7 40 B8 ? ? ? ?"), typeof(ExecPhaseBattleResult));
             resFunc.Invoke(rawPtr);
         }
 
@@ -108,16 +108,16 @@ namespace Brawler
                                     {
                                         BattleCamera.Phase = 2;
                                         BrawlerBattleManager.KasugaChara.GetMotion().RequestBehavior(MotionBehaviorType.Battle, BehaviorActionID.P_KRU_MOV_std_btl_cautnml_tfm);
+
+                                        //Played through soundmanager so that its 2D and easier to hear
+                                        if (!BrawlerBattleManager.Kasuga.IsBrawlerCriticalHP())
+                                            SoundManager.PlayCue(SoundCuesheetID.gv_fighter_kasuga, 84, 0);
+                                        else
+                                            SoundManager.PlayCue(SoundCuesheetID.gv_fighter_kasuga, 86, 0);
                                     }, false),
                 new DETaskTime(1.5f,
                 delegate
                 {
-                    //Played through soundmanager so that its 2D and easier to hear
-                    if (!BrawlerBattleManager.Kasuga.IsBrawlerCriticalHP())
-                        SoundManager.PlayCue(SoundCuesheetID.gv_fighter_kasuga, 84, 0);
-                    else
-                        SoundManager.PlayCue(SoundCuesheetID.gv_fighter_kasuga, 86, 0);
-
                     BattleTurnManager.ChangePhase(BattleTurnManager.TurnPhase.BattleResult);
 
                     if (!IniSettings.EnableBattleResults)

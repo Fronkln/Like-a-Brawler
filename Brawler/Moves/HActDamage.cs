@@ -30,7 +30,7 @@ namespace Brawler
         public static void Hook()
         {
             _dmgDeleg = new DamageNodeProcHook(DmgProc);
-            MinHookHelper.createHook((IntPtr)0x14094E540, _dmgDeleg, out _dmgTrampoline);
+            MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 55 56 57 41 56 41 57 48 8D AC 24 B0 F8 FF FF"), _dmgDeleg, out _dmgTrampoline);
         }
 
 

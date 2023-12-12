@@ -109,6 +109,9 @@ namespace Brawler
                     kasugaUIRoot.GetChild(1).GetChild(7).SetVisible(false);
                 }
             }
+            
+            if (!BrawlerBattleManager.KasugaChara.IsValid())
+                return;
 
             lastPlayerHP = Player.GetHPNow(Player.ID.kasuga);
 

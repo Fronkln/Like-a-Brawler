@@ -219,6 +219,14 @@ namespace Brawler
 
                 case HeatActionConditionType.Down:
 
+                    if (!performerIsPlayer)
+                        if (ai.IsBeingJuggled())
+                        {
+                            flag = false;
+                            break;
+                        }
+                    
+
                     if (cond.Param2B)
                         flag = inf.IsFaceDown || inf.IsDown;
                     else
@@ -231,6 +239,13 @@ namespace Brawler
                     break;
 
                 case HeatActionConditionType.DownOrGettingUp:
+                    if (!performerIsPlayer)
+                        if (ai.IsBeingJuggled())
+                        {
+                            flag = false;
+                            break;
+                        }
+
                     flag = inf.IsDown || inf.IsGettingUp;
                     break;
                 case HeatActionConditionType.CriticalHP:
@@ -335,9 +350,15 @@ namespace Brawler
                     flag = Logic.CheckNumberLogicalOperator((uint)inf.RightWeapon.Unit.AssetID, cond.Param1U32, cond.LogicalOperator);
                     break;
                 case HeatActionConditionType.WeaponType:
+                    if (inf.RightWeapon == null)
+                        return false;
+
                     flag = (uint)Asset.GetArmsCategory(inf.RightWeapon.Unit.AssetID) == cond.Param1U32;
                     break;
                 case HeatActionConditionType.WeaponSubtype:
+                    if (inf.RightWeapon == null)
+                        return false;
+
                     flag = (uint)Asset.GetArmsCategorySub(inf.RightWeapon.Unit.AssetID) == cond.Param1U32;
                     break;
                 case HeatActionConditionType.StageID:

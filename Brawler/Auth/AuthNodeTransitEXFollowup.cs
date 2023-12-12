@@ -8,7 +8,7 @@ namespace Brawler.Auth
     //60010: Brawler Player Transit EX Followup
     internal class AuthNodeTransitEXFollowup
     {
-        public static unsafe void Play(IntPtr thisObj, uint tick, IntPtr mtx, uint unk)
+        public static unsafe void Play(IntPtr thisObj, uint tick, IntPtr mtx, IntPtr unk)
         {
             IntPtr yhcNamePtr = (IntPtr)(thisObj.ToInt64() + 52);
             IntPtr yhcAttackNamePtr = (IntPtr)(thisObj.ToInt64() + 84);

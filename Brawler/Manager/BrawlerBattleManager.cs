@@ -121,7 +121,7 @@ namespace Brawler
 
         public static bool IsThereAnyBoss()
         {
-            return Enemies.FirstOrDefault(x => x.IsBoss()) != null;
+            return Enemies.FirstOrDefault(x => x.IsBoss()).IsValid();
         }
 
         private static bool ShouldShowHeatAura()
@@ -223,7 +223,7 @@ namespace Brawler
             //EX Cancel
             if (immediate)
             {
-                AttackSimulator.PlayerInstance.LastEnemyHitCurrentCombo = null;
+                AttackSimulator.PlayerInstance.LastEnemyHitCurrentCombo = new Fighter();
                 AttackSimulator.PlayerInstance.m_attacking = false;          
                 AttackSimulator.PlayerInstance.CurrentAttack = null;
                 AttackSimulator.PlayerInstance.Stop();
@@ -300,7 +300,7 @@ namespace Brawler
             SoundManager.LoadCuesheet((SoundCuesheetID)5603); //bbg_z (bbg_brawler_btled part 2)
             SoundManager.LoadCuesheet((SoundCuesheetID)5596); //bbg_k (battle themes that replace repetitive ones)
             SoundManager.LoadCuesheet((SoundCuesheetID)2546); //act_player
-            SoundManager.LoadCuesheet((SoundCuesheetID)5657); //y7b_common
+            SoundManager.LoadCuesheet((SoundCuesheetID)5660); //y7b_common
 
             EffectEventManager.LoadScreen(3); //ogref_bact
 

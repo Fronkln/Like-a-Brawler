@@ -1,0 +1,4 @@
+[submodule "Dependencies/Dragon-Engine-.NET"]
+	path = Dependencies/Dragon-Engine-.NET
+	url = https://github.com/Fronkln/Dragon-Engine-.NET
+	branch = main

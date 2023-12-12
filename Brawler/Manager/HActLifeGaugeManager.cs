@@ -12,7 +12,7 @@ namespace Brawler
         private static UIHandleBase m_lifeRoot;
 
 
-        private static Fighter m_lastInitedFighter = null;
+        private static Fighter m_lastInitedFighter = new Fighter();
 
         public static void Init()
         {
@@ -65,7 +65,9 @@ namespace Brawler
 
         private static void OnHActStart()
         {
-            if (BrawlerBattleManager.EnemiesNearest.Length <= 0)
+            BattleTurnManager.TurnPhase phase = BattleTurnManager.CurrentPhase;
+
+            if (BrawlerBattleManager.EnemiesNearest.Length <= 0 || phase <= BattleTurnManager.TurnPhase.Start)
             {
                 SetVisible(false);
                 return;

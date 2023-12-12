@@ -8,7 +8,7 @@ namespace Brawler
     public class HeatActionInformation
     {
         public HeatActionAttack Hact = null;
-        public Fighter Performer = null;
+        public Fighter Performer = new Fighter();
         public HActRangeInfo RangeInfo; //Assigned if found
         public Dictionary<HeatActionActorType, Fighter> Map = new Dictionary<HeatActionActorType, Fighter>();
     }

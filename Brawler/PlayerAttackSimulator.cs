@@ -62,7 +62,7 @@ namespace Brawler
         public void Stop()
         {
             m_attacking = false;
-            LastEnemyHitCurrentCombo = null;
+            LastEnemyHitCurrentCombo = new Fighter();
             m_currentGroup = null;
             m_currentSet = null;
             CurrentAttack = null;
@@ -134,7 +134,7 @@ namespace Brawler
                         if(Attacker.Character.HumanModeManager.IsInputMove())
                             Attacker.Character.HumanModeManager.ToEndReady();
 
-                            LastEnemyHitCurrentCombo = null;
+                            LastEnemyHitCurrentCombo = new Fighter();
                             m_attacking = false;
                             m_attackGmtReady = false;
                             CurrentAttack = null;
@@ -289,7 +289,7 @@ namespace Brawler
                 m_attacking = false;
                 m_attackGmtReady = false;
                 m_currentSet = null;
-                LastEnemyHitCurrentCombo = null;
+                LastEnemyHitCurrentCombo = new Fighter();
                 CurrentAttack = null;
                 ClearInputs();
                 return;
@@ -597,13 +597,13 @@ namespace Brawler
                         flag = BrawlerPlayer.IsInputKamae();
                     break;
                 case AttackConditionType.LockedEnemyDown:
-                    Fighter lockOnTarget = null;
+                    Fighter lockOnTarget = new Fighter();
 
                     if (Attacker.IsPlayer())
                         lockOnTarget = BrawlerPlayer.GetLockOnTarget(BrawlerBattleManager.Kasuga);
                     else
                         lockOnTarget = BrawlerBattleManager.Kasuga;
-                    flag = lockOnTarget != null && lockOnTarget.IsDown();
+                    flag = lockOnTarget.IsValid() && lockOnTarget.IsDown();
                     break;
 
 

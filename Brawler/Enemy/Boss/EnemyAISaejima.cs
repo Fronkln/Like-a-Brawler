@@ -31,10 +31,7 @@ namespace Brawler
 
             Kyodai = BrawlerBattleManager.Enemies.FirstOrDefault(x => EnemyManager.EnemyAIs[x.Character.UID] is EnemyAIMajima);
 
-            if (Kyodai == null)
-                Kyodai = new Fighter((IntPtr)0);
-
-            if (Kyodai != null)
+            if (Kyodai.IsValid())
                 Console.WriteLine("found my bro!");
         }
 
