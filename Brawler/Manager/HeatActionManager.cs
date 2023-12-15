@@ -146,10 +146,10 @@ namespace Brawler
             float mult = 1;
             int numIncrease = 0;
 
-            for (int i = 8; i < 61 && i < playerLevel; i += 4)
+            for (int i = 7; i < 61 && i < playerLevel; i += 3)
                 numIncrease++;
 
-            mult = (float)Math.Pow(1.25f, numIncrease);
+            mult = (float)Math.Pow(1.28f, numIncrease);
             DamageScale = mult;
 
             DragonEngine.Log("Multiplier: " + mult + "\n20 damage with multiplier: " + 20 * mult);
@@ -265,6 +265,9 @@ namespace Brawler
                 return false;
 
             if (BattleTurnManager.CurrentPhase != BattleTurnManager.TurnPhase.Action)
+                return false;
+
+            if (TutorialManager.Active && TutorialManager.Current.Modifiers.HasFlag(TutorialModifier.NoHAct))
                 return false;
 
             int heatNow = Player.GetHeatNow(Player.ID.kasuga);
