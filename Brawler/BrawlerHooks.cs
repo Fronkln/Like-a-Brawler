@@ -170,7 +170,7 @@ namespace Brawler
             MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 56 57 41 56 41 57"), _damageExecValidDeleg, out _damageExecValidTrampoline);
 
             long* camFreeVfTable = (long*)DragonEngineLibrary.Unsafe.CPP.ResolveRelativeAddress(DragonEngineLibrary.Unsafe.CPP.PatternSearch("48 8D 05 ? ? ? ? 48 89 07 48 8D B7 60 02 00 00"), 7);
-            MinHookHelper.createHook((IntPtr)damageVfTable[79], _cameraFreeIsRotateBehindDeleg, out _cameraFreeIsRotateBehindTrampoline);
+            MinHookHelper.createHook((IntPtr)camFreeVfTable[79], _cameraFreeIsRotateBehindDeleg, out _cameraFreeIsRotateBehindTrampoline);
 
             MinHookHelper.createHook(DragonEngineLibrary.Unsafe.CPP.PatternSearch("40 57 48 83 EC ? 48 C7 44 24 20 ? ? ? ? 48 89 5C 24 70 48 89 74 24 78 48 8B F9 48 8D 99 20 4B 00 00"), _charaReqStartFighterDeleg, out _charaReqStartFighterTrampoline);
 
@@ -186,10 +186,6 @@ namespace Brawler
 
             //SYSTEM: Allow us to change the speed of "Unprocessed" (observed in hacts)
             DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("80 F9 ? 74 ? 0F B6 C1"), 5);
-
-            //CAMERA FREE: DISABLE CAMERA TWERKING ON BATTLE/CAMERA LINK OUT
-            //TODO URGENT: Only do this on combat!
-            DragonEngineLibrary.Unsafe.CPP.NopMemory(DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? C5 FC 10 44 24 40 C4 C1 7C 11 87 40 01 00 00"), 5);
 
             //COMBAT: Prevent non-functional stun escape prompt from stuttering the game
             //on the extremely rare chance that we get Y6 wallbound/stunned
@@ -255,6 +251,27 @@ namespace Brawler
 
 
             MinHookHelper.enableAllHook();
+
+            BrawlerBattleManager.OnBattleStart += OnBattleStart;
+            BrawlerBattleManager.OnBattleEnd += OnBattleEnd;
+        }
+
+
+        private static IntPtr m_twerkAddr;
+        private static byte[] m_cameraTwerkBits = new byte[5];
+        public static void OnBattleStart()
+        {
+            m_twerkAddr = DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? C5 FC 10 44 24 40 C4 C1 7C 11 87 40 01 00 00");
+            Marshal.Copy(m_twerkAddr, m_cameraTwerkBits, 0, 5);
+
+            //CAMERA FREE: DISABLE CAMERA TWERKING ON BATTLE/CAMERA LINK OUT
+            //TODO URGENT: Only do this on combat!
+            DragonEngineLibrary.Unsafe.CPP.NopMemory(m_twerkAddr, 5);
+        }
+
+        public static void OnBattleEnd()
+        {
+            DragonEngineLibrary.Unsafe.CPP.PatchMemory(m_twerkAddr, m_cameraTwerkBits);
         }
 
         private static CharacterRequestStartFighter _charaReqStartFighterDeleg;
