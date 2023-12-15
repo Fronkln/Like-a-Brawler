@@ -14,7 +14,10 @@ namespace Brawler
 
         private static Dictionary<uint, List<TalkParamID>> m_revelationMap = new Dictionary<uint, List<TalkParamID>>();
         private static List<TalkParamID> m_revelationQueue = new List<TalkParamID>();
-        
+
+
+        private static bool m_playerExistsDoOnce = false;
+
         public static void Init()
         {
             ReadRevelationsFile();
@@ -23,6 +26,11 @@ namespace Brawler
             BrawlerBattleManager.OnBattleEnd += OnBattleEnd;
 
             DragonEngine.RegisterJob(Update, DEJob.Update);
+        }
+
+        public static bool IsQueue()
+        {
+            return m_revelationQueue.Count > 0;
         }
 
 
@@ -68,6 +76,27 @@ namespace Brawler
 
         public static void Update()
         {
+            if (!m_playerExistsDoOnce)
+            {
+                if (BrawlerBattleManager.KasugaChara.IsValid())
+                {
+                    m_playerExistsDoOnce = true;
+                    uint startLevel = BrawlerSaveData.GetRevelationQueue();
+
+                    if (startLevel > 0)
+                        m_revelationQueue = GetRevelations(BrawlerSaveData.GetRevelationQueue());
+                    else
+                        m_revelationQueue.Clear();
+
+                    DragonEngine.Log("Recovered revelations savedata. Revelation queue length: " + m_revelationQueue.Count);
+                }
+            }
+            else
+            {
+                if (!BrawlerBattleManager.KasugaChara.IsValid())
+                    m_playerExistsDoOnce = false;
+            }
+
             if (!ShouldDoRevelationProcedure())
                 m_validTime = 0;
             else
@@ -87,8 +116,26 @@ namespace Brawler
             }
         }
 
+
+        private static List<TalkParamID> GetRevelations(uint startLevel)
+        {
+            List<TalkParamID> revList = new List<TalkParamID>();
+
+            for (uint i = startLevel; i < Player.GetLevel(Player.ID.kasuga) + 1; i++)
+            {
+                if (!m_revelationMap.ContainsKey(i))
+                    continue;
+
+                revList.AddRange(m_revelationMap[i]);
+            }
+
+            return revList;
+        }
+
         private static void DoRevelationProcedure()
         {
+            BrawlerSaveData.SetRevelationQueue(0);
+
             TalkParamID hactID = (TalkParamID)12939;
 
             HActRequestOptions opts = new HActRequestOptions();
@@ -100,7 +147,7 @@ namespace Brawler
             opts.Register(HActReplaceID.hu_player, BrawlerBattleManager.KasugaChara);
             HActManager.RequestHActProc(opts);
 
-            DragonEngine.Log("OH SHIT!");
+            DragonEngine.Log("That's rad!");
 
 
             new DETask(delegate { return !HActManager.IsPlaying(); }, 
@@ -173,13 +220,11 @@ namespace Brawler
         //defined in revelations.txt
         private static void CheckRevelationEligibility()
         {
-            for(uint i = m_lastPlayerLevel + 1; i < Player.GetLevel(Player.ID.kasuga) + 1; i++)
-            {
-                if (!m_revelationMap.ContainsKey(i))
-                    continue;
+            List<TalkParamID> revelations = GetRevelations(m_lastPlayerLevel + 1);
+            m_revelationQueue = revelations;
 
-                m_revelationQueue.AddRange(m_revelationMap[i]);
-            }
+            if(m_revelationQueue.Count > 0)
+                BrawlerSaveData.SetRevelationQueue((int)m_lastPlayerLevel + 1);
         }
 
         private static void OnBattleStart()
@@ -191,6 +236,8 @@ namespace Brawler
         {
             if(Player.GetLevel(Player.ID.kasuga) > m_lastPlayerLevel)
                 CheckRevelationEligibility();
+
+            EffectEventManager.StopScreen(7);
         }
     }
 }

@@ -110,7 +110,7 @@ namespace Brawler
                 }
             }
             
-            if (!BrawlerBattleManager.KasugaChara.IsValid())
+            if (!BrawlerBattleManager.Kasuga.IsValid())
                 return;
 
             lastPlayerHP = Player.GetHPNow(Player.ID.kasuga);

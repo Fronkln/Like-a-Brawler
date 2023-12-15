@@ -15,8 +15,12 @@ namespace Brawler
 
                 if (enemies.Length >= 0)
                 {
-                    if (enemies[0].Character.Attributes.soldier_data_id == CharacterNPCSoldierPersonalDataID.yazawa_btl01_0010_000_1)
+                    if (BattleProperty.BattleConfigID == 6)
                         Tutorial01();
+                    else if (BattleProperty.BattleConfigID == 12)
+                        Tutorial02();
+                    else if (BattleProperty.BattleConfigID == 139)
+                        Tutorial03();
                     else
                     {
                         //Dont change to BattleManager.Enemies
@@ -42,6 +46,7 @@ namespace Brawler
         }
 
 
+        //Basic controls
         private static void Tutorial01()
         {
             int m_blockCount = 0;
@@ -54,20 +59,20 @@ namespace Brawler
                                 {
                                     Instructions = "Test!",
                                     TimeToComplete = 1f,
-                                    OnStart = delegate{HActManager.RequestHAct(new HActRequestOptions(){id = (TalkParamID)12902, is_force_play = true}); DragonEngine.Log("play hact"); },
+                                    OnStart = delegate{HActManager.RequestHAct(new HActRequestOptions(){id = (TalkParamID)12902, is_force_play = true}); },
                                     Silent = true
                                 },
                                 new TutorialSegment()
                                 {
                                     Instructions = "",
                                     TimeToComplete = 1f,
-                                    OnStart = delegate{BattleTurnManager.RequestHActEvent(new HActRequestOptions(){id = (TalkParamID)12903, is_force_play = true}); DragonEngine.Log("play hact 2");  },
+                                    OnStart = delegate{BattleTurnManager.RequestHActEvent(new HActRequestOptions(){id = (TalkParamID)12903, is_force_play = true});  },
                                     Silent = true
                                 },
                                 new TutorialSegment()
                                 {
                                     Instructions = "Testing",
-                                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage,
+                                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
                                     TimeoutIsSuccess = true,
                                     IsCompleteDelegate = delegate{return false; },
                                     TimeToComplete = 20,
@@ -80,15 +85,14 @@ namespace Brawler
                                 },
                                 new TutorialSegment()
                                 {
-                                    Instructions = "Testing",
-                                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage,
+                                    Instructions = "",
+                                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
                                     TimeoutIsSuccess = true,
                                     IsCompleteDelegate = delegate{return false; },
                                     TimeToComplete = 20,
                                     UpdateDelegate =
                                     delegate
                                     {
-                                        string lightFmt = TutorialManager.GetFormattedButtonStr(TutorialButton.LightAttack);
                                         string heavyFmt = TutorialManager.GetFormattedButtonStr(TutorialButton.HeavyAttack);
                                         TutorialManager.SetText(
                                             $"{heavyFmt} during a Rush Combo\n" +
@@ -98,7 +102,7 @@ namespace Brawler
                                 new TutorialSegment()
                                 {
                                     Instructions = "",
-                                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage,
+                                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
                                     TimeoutIsSuccess = false,
                                     IsCompleteDelegate = delegate{ return AttackSimulator.PlayerInstance.CurrentAttack != null && AttackSimulator.PlayerInstance.CurrentAttack.AttackType == YazawaCommand.AttackType.MoveSidestep; },
                                     TimeToComplete = 10,
@@ -112,7 +116,7 @@ namespace Brawler
                                 new TutorialSegment()
                                 {
                                     Instructions = "",
-                                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage,
+                                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
                                     TimeoutIsSuccess = false,
                                     IsCompleteDelegate = delegate{return m_blockCount == 3; },
                                     TimeToComplete = 15,
@@ -130,7 +134,7 @@ namespace Brawler
                                 new TutorialSegment()
                                 {
                                     Instructions = "",
-                                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage,
+                                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
                                     TimeoutIsSuccess = true,
                                     IsCompleteDelegate = delegate{return false; },
                                     TimeToComplete = 25,
@@ -148,6 +152,86 @@ namespace Brawler
                                     TimeToComplete = -1,
                                 },
                 });
+        }
+
+        //HAct and weapon
+        private static void Tutorial02()
+        {
+            TutorialManager.Initialize(new TutorialSegment[]
+            {
+
+                new TutorialSegment()
+                {
+                    Instructions = "",
+                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
+                    TimeoutIsSuccess = true,
+                    IsCompleteDelegate= delegate{return false ; },
+                    TimeToComplete = 15,
+                    UpdateDelegate =
+                    delegate
+                    {
+                        string lockFmt = TutorialManager.GetFormattedButtonStr(TutorialButton.LockOn);
+                        TutorialManager.SetText($"Lock onto the nearest enemy with {lockFmt}\nBattle Stance");
+                    }
+                },
+                new TutorialSegment()
+                {
+                    Instructions = "",
+                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
+                    TimeoutIsSuccess = true,
+                    IsCompleteDelegate= delegate{return BrawlerPlayer.Info.RightWeapon.IsValid(); },
+                    TimeToComplete = 15,
+                    UpdateDelegate =
+                    delegate
+                    {
+                        string grabFmt = TutorialManager.GetFormattedButtonStr(TutorialButton.Grab);
+                        TutorialManager.SetText($"Pick up nearby weapons with {grabFmt}\nPicking Weapons");
+                    }
+                },
+                new TutorialSegment()
+                {
+                    Instructions = "",
+                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage,
+                    TimeoutIsSuccess = true,
+                    IsCompleteDelegate= delegate{return BrawlerBattleManager.HActIsPlaying; },
+                    TimeToComplete = 30,
+                    UpdateDelegate =
+                    delegate
+                    {
+                        Player.SetHeatNow(Player.ID.kasuga, Player.GetHeatMax(Player.ID.kasuga));
+
+                        string heavyFmt = TutorialManager.GetFormattedButtonStr(TutorialButton.HeavyAttack);
+                        TutorialManager.SetText($"{heavyFmt} nearby a downed enemy or while holding a weapon\nHeat Actions");
+                    }
+                }
+            }); ;
+        }
+
+        private static void Tutorial03()
+        {
+            //lets ensure kasuga has the ability to enter extreme heat mode here
+            if (Player.GetLevel(Player.ID.kasuga) < 8)
+                Player.SetLevel(8, Player.ID.kasuga);
+
+            TutorialManager.Initialize(new TutorialSegment[]
+            {
+                new TutorialSegment()
+                {
+                    Instructions = "",
+                    Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
+                    TimeoutIsSuccess = true,
+                    IsCompleteDelegate= delegate{return BrawlerPlayer.IsEXGamer; },
+                    TimeToComplete = -1,
+                    UpdateDelegate =
+                    delegate
+                    {
+                        Player.SetHeatNow(Player.ID.kasuga, Player.GetHeatMax(Player.ID.kasuga));
+
+                        string heatFmt = TutorialManager.GetFormattedButtonStr(TutorialButton.ExHeat);
+                        TutorialManager.SetText($"Enter extreme heat mode with {heatFmt}\nExtreme Heat Mode");
+                    }
+                },
+            });
         }
     }
 }

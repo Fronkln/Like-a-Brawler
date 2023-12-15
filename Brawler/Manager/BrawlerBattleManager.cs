@@ -445,8 +445,6 @@ namespace Brawler
                     OnBattleStart?.Invoke();
                     OnBattleStartEvent();
 
-                    HActManager.RequestPreload(TalkParamID.yazawa_btled_dummy).Get().Restart();
-
                     BattleStartDoOnce = true;
                 }
 

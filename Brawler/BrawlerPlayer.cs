@@ -282,11 +282,13 @@ namespace Brawler
             bool attacking = AttackSimulator.PlayerInstance.Attacking();
             bool wepUpdate = WeaponManager.InputUpdate(unit) && !attacking;
 
+            /* Krcwo forgive me
             if (DragonEngine.IsKeyDown(VirtualKey.N1))
                 ChangeStyle(Styles[0]);
 
             if (DragonEngine.IsKeyDown(VirtualKey.N2))
                 ChangeStyle(Styles[1]);
+            */
 
             RPGJobID job = Player.GetCurrentJob(Player.ID.kasuga);
             bool isExCancel = AttackSimulator.PlayerInstance.IsInFollowupWindow() && AttackSimulator.PlayerInstance.Attacking();

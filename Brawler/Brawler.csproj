@@ -116,6 +116,7 @@
     <Compile Include="BattleCamera.cs" />
     <Compile Include="BrawlerBattleTransition.cs" />
     <Compile Include="BrawlerConfig.cs" />
+    <Compile Include="BrawlerSaveData.cs" />
     <Compile Include="Enemy\Boss\EnemyAIAoki2.cs" />
     <Compile Include="Enemy\Boss\EnemyAIBossGenericHitman.cs" />
     <Compile Include="Enemy\Boss\EnemyAIBossGenericWPG.cs" />
