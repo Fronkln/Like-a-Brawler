@@ -15,6 +15,8 @@ namespace Brawler
         private float m_nextMortalAttackTime = 0;
         private int m_numMortalAttacks = 0;
 
+        private int m_mortalPhase = 0;
+
         private readonly RPGSkillID[] m_wpkSwayAtks = new RPGSkillID[]
         {
             (RPGSkillID)1795,
@@ -32,10 +34,25 @@ namespace Brawler
         {
             base.CombatUpdate();
 
-            if (!m_isMortal)
+
+            switch(m_mortalPhase)
             {
-                EnterMortal();
-                return;
+                case 0:
+                    if (Character.IsHPBelowRatio(0.6f) && !m_isMortal)
+                    {
+                        EnterMortal();
+                        m_mortalPhase = 1;
+                    }
+                    break;
+
+                case 1:
+                    if (Character.IsHPBelowRatio(0.3f) && !m_isMortal)
+                    {
+                        EnterMortal();
+                        m_mortalPhase = 2;
+                    }
+                    break;
+
             }
 
             if (m_isMortal)
@@ -63,10 +80,6 @@ namespace Brawler
             }
             else
             {
-                if(Character.IsHPBelowRatio(0.75f))
-                {
-                    EnterMortal();
-                }
             }
         }
 
