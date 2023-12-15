@@ -8,6 +8,7 @@ namespace Brawler
         None = 0,
         PlayerDontTakeDamage = 1,
         EnemyDontTakeDamage = 2,
-        DontDepleteHeat = 4
+        DontDepleteHeat = 4,
+        NoHAct = 8
     }
 }

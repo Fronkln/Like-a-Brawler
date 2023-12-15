@@ -26,6 +26,11 @@ namespace Brawler
 
         private static bool m_goNext = false;
 
+
+        private static bool m_pendingInit = false;
+
+        public static TutorialSegment Current { get { return m_tutorialSegments[m_curSegment]; } }
+
         public static void Initialize(TutorialSegment[] segments)
         {
             new DETask(delegate { return !HActManager.IsPlaying() && BattleTurnManager.CurrentPhase == BattleTurnManager.TurnPhase.Action; }, delegate {  OnCombatStart(segments); });
@@ -42,10 +47,11 @@ namespace Brawler
 
             //  m_textHandle.SetText("Hit the <color=heal_hp>griddy</color> <color=red>1337</color> times or die\n Performing Twerk Actions");
 
+            Active = true;
+            m_pendingInit = true;
             m_tutorialSegments = segments;
-            m_curSegment = 0;
-
-            new DETaskTime(1.5f, delegate { Active = true; StartSegment(0); });
+            //m_curSegment = 0;
+            //new DETaskTime(1f, delegate { Active = true; StartSegment(0); });
         }
 
         public static void SetVisible(bool visible)
@@ -130,9 +136,21 @@ namespace Brawler
 
         public static void Update()
         {
-            if (!Active || Mod.IsGamePaused || BrawlerBattleManager.HActIsPlaying || IsTutorialPromptVisible() || m_wait)
+            if (!Active || Mod.IsGamePaused || IsTutorialPromptVisible() || m_wait)
                 return;
 
+
+            if(m_pendingInit)
+            {
+                if ((BrawlerBattleManager.HActIsPlaying || RevelationManager.IsQueue()))
+                    return;
+                else
+                {
+                    StartSegment(0);
+                    m_pendingInit = false;
+                    return;
+                }
+            }
 
             if (m_curSegment >= m_tutorialSegments.Length)
             {
@@ -140,17 +158,9 @@ namespace Brawler
                 m_curSegment = 0;
                 m_tutorialSegments = null;
                 SetVisible(false);
+                m_pendingInit = false;
                 return;
             }
-
-#if DEBUG
-            if(DragonEngine.IsKeyHeld(VirtualKey.LeftShift))
-                if(DragonEngine.IsKeyHeld(VirtualKey.F))
-                {
-                    OnSuccess();
-                    return;
-                }
-#endif
 
             TutorialSegment curSegment = m_tutorialSegments[m_curSegment];
 
@@ -177,10 +187,13 @@ namespace Brawler
             if (curSegment.TimeToComplete <= 0 || m_curSegmentTimer < 0)
                 return;
 
-            m_curSegmentTimer -= DragonEngine.deltaTime;
-            TimeSpan timerTime = TimeSpan.FromSeconds(m_curSegmentTimer);
-
-            m_timerHandle.SetText(timerTime.ToString(@"mm\:ss"));
+            if (!BrawlerBattleManager.HActIsPlaying)
+            {
+                m_curSegmentTimer -= DragonEngine.deltaTime;
+                TimeSpan timerTime = TimeSpan.FromSeconds(m_curSegmentTimer);
+                
+                m_timerHandle.SetText(timerTime.ToString(@"mm\:ss"));
+            }
         }
 
         public static void SetText(string txt)
@@ -220,7 +233,11 @@ namespace Brawler
                         return "<symbol=y7b_keyboard_e>";
                     else
                         return "<symbol=button_maru>";
-                
+                case TutorialButton.LockOn:
+                    return "<symbol=button_r1>";
+                case TutorialButton.ExHeat:
+                    return "<symbol=button_r2>";
+
             }
 
             return "(INVALID_BUTTON!)";

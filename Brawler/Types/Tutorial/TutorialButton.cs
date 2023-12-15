@@ -14,6 +14,7 @@ namespace Brawler
         Block,
         ExHeat,
         Inventory,
-        Grab
+        Grab,
+        LockOn
     }
 }
