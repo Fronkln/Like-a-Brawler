@@ -785,6 +785,31 @@ namespace Brawler
                     else
                         return false;
                     break;
+
+                case AttackConditionType.NearestEnemyFlag:
+
+                    if (BrawlerBattleManager.EnemiesNearest.Length <= 0)
+                        flag = false;
+
+                    Fighter nearestEnemy = BrawlerBattleManager.EnemiesNearest[0];
+
+                    switch((NearestEnemyFlag)cond.Param1U32)
+                    {
+                        default:
+                            flag = true;
+                            break;
+
+                        case NearestEnemyFlag.IsDown:
+                            return inf.IsDown;
+                        case NearestEnemyFlag.IsGettingUp:
+                            return inf.IsGettingUp;
+                        case NearestEnemyFlag.FacingPlayer:
+                            float faceDot = Vector3.Dot(nearestEnemy.Character.Transform.forwardDirection, (BrawlerBattleManager.KasugaChara.Transform.Position - nearestEnemy.Character.Transform.Position).normalized);
+                            flag = faceDot >= 0.2;
+                            break;
+                    }
+
+                    break;
             }
 
 
