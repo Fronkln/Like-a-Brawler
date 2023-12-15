@@ -63,7 +63,7 @@ namespace Yazawa_Commander
             switch (Condition.Type)
             {
                 default:
-                    name += "Unknown Condition";
+                    name += Condition.Type.ToString();
                     break;
                 case AttackConditionType.Down:
                     name += "Player Down";
@@ -126,6 +126,10 @@ namespace Yazawa_Commander
 
                 case AttackConditionType.DistanceToRange:
                     name += $"Distance to Range {GetLogicalOperatorSymbol(Condition.LogicalOperator)} {Condition.Param1F}";
+                    break;
+
+                case AttackConditionType.NearestEnemyFlag:
+                    name += $"Nearest Enemy Flag: {(NearestEnemyFlag)Condition.Param1U32}";
                     break;
 
             }

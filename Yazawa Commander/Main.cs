@@ -264,6 +264,10 @@ namespace Yazawa_Commander
                     CreateInput("Distance", cond.Condition.Param1F.ToString(), delegate (string val) { cond.Condition.Param1F = Utils.InvariantParse(val); cond.Update(); }, NumberBox.NumberMode.Float);
                     break;
 
+                case AttackConditionType.NearestEnemyFlag:
+                    CreateComboBox("Type", (int)cond.Condition.Param1U32, Enum.GetNames<NearestEnemyFlag>(), delegate (int idx) { cond.Condition.Param1U32 = (uint)idx; cond.Update(); });
+                    break;
+
             }
         }
 

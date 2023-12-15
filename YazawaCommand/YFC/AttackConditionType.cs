@@ -31,6 +31,7 @@ namespace YazawaCommand
         SyncType = 262144,
         SyncDirection = 524288,
         DistanceToRange = 1048576,
-        FacingRange = 2097152
+        FacingRange = 2097152,
+        NearestEnemyFlag = 4194304
     }
 }

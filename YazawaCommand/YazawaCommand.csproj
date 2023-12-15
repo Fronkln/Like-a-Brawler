@@ -64,6 +64,7 @@
     <Compile Include="YFC\AttackSyncDirection.cs" />
     <Compile Include="YFC\AttackSyncType.cs" />
     <Compile Include="YFC\AttackType.cs" />
+    <Compile Include="YFC\NearestEnemyFlag.cs" />
     <Compile Include="YHC.cs" />
     <Compile Include="YHC\HeatActionActorType.cs" />
     <Compile Include="YHC\HeatActionAttack.cs" />
