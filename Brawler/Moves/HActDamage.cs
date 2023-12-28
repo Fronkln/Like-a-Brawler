@@ -114,10 +114,19 @@ namespace Brawler
             }
 
             bool dieThroughNormalMeans = finalHp <= 0 && !noDeath;
-            bool shouldDie = (dieThroughNormalMeans || forceDie) && !noDeath;
+            bool shouldDie = ((dieThroughNormalMeans || forceDie) && !noDeath);
 
-            result.Dies = shouldDie;
-            result.Damage = finalDmg;
+            if (!ai.CanDieOnHAct())
+            {
+                dieThroughNormalMeans = false;
+                result.Dies = false;
+                result.Damage = 0;
+            }
+            else
+            {
+                result.Dies = shouldDie;
+                result.Damage = finalDmg;
+            }
 
             return result;
         }
@@ -189,7 +198,7 @@ namespace Brawler
                     if (victim.IsBoss())
                     {
                         if (ai != null)
-                            ai.ProcessHActDamage(AuthManager.PlayingScene.Get().TalkParamID, result.Damage);
+                            result.Damage = ai.ProcessHActDamage(AuthManager.PlayingScene.Get().TalkParamID, result.Damage);
                     }
 
                     long finalHp = finalHp = victimStatus.CurrentHP - result.Damage;

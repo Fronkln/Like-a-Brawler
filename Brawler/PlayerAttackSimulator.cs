@@ -807,6 +807,10 @@ namespace Brawler
                             float faceDot = Vector3.Dot(nearestEnemy.Character.Transform.forwardDirection, (BrawlerBattleManager.KasugaChara.Transform.Position - nearestEnemy.Character.Transform.Position).normalized);
                             flag = faceDot >= 0.2;
                             break;
+                        case NearestEnemyFlag.Distance:
+                            float dist = Vector3.Distance(nearestEnemy.Character.Transform.Position, BrawlerBattleManager.KasugaChara.Transform.Position);
+                            flag = CheckNumberLogicalOperator(dist, cond.Param1F, cond.LogicalOperator);
+                            break;
                     }
 
                     break;

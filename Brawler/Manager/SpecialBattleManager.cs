@@ -52,7 +52,7 @@ namespace Brawler
             int m_blockCount = 0;
 
             //Testing
-            TutorialManager.Initialize(
+            TutorialManager.InitializeTutorial(
                 new TutorialSegment[]
                 {
                                 new TutorialSegment()
@@ -75,7 +75,7 @@ namespace Brawler
                                     Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
                                     TimeoutIsSuccess = true,
                                     IsCompleteDelegate = delegate{return false; },
-                                    TimeToComplete = 20,
+                                    TimeToComplete = 15,
                                     UpdateDelegate =
                                     delegate
                                     {
@@ -89,7 +89,7 @@ namespace Brawler
                                     Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
                                     TimeoutIsSuccess = true,
                                     IsCompleteDelegate = delegate{return false; },
-                                    TimeToComplete = 20,
+                                    TimeToComplete = 15,
                                     UpdateDelegate =
                                     delegate
                                     {
@@ -136,7 +136,7 @@ namespace Brawler
                                     Instructions = "",
                                     Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
                                     TimeoutIsSuccess = true,
-                                    IsCompleteDelegate = delegate{return false; },
+                                    IsCompleteDelegate = delegate{return AttackSimulator.PlayerInstance.CurrentAttack!= null && AttackSimulator.PlayerInstance.CurrentAttack.AttackType == YazawaCommand.AttackType.MoveSync;  },
                                     TimeToComplete = 25,
                                     UpdateDelegate =
                                     delegate
@@ -157,7 +157,7 @@ namespace Brawler
         //HAct and weapon
         private static void Tutorial02()
         {
-            TutorialManager.Initialize(new TutorialSegment[]
+            TutorialManager.InitializeTutorial(new TutorialSegment[]
             {
 
                 new TutorialSegment()
@@ -166,7 +166,7 @@ namespace Brawler
                     Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
                     TimeoutIsSuccess = true,
                     IsCompleteDelegate= delegate{return false ; },
-                    TimeToComplete = 15,
+                    TimeToComplete = 10,
                     UpdateDelegate =
                     delegate
                     {
@@ -213,7 +213,7 @@ namespace Brawler
             if (Player.GetLevel(Player.ID.kasuga) < 8)
                 Player.SetLevel(8, Player.ID.kasuga);
 
-            TutorialManager.Initialize(new TutorialSegment[]
+            TutorialManager.InitializeTutorial(new TutorialSegment[]
             {
                 new TutorialSegment()
                 {
@@ -221,7 +221,7 @@ namespace Brawler
                     Modifiers = TutorialModifier.PlayerDontTakeDamage | TutorialModifier.EnemyDontTakeDamage | TutorialModifier.NoHAct,
                     TimeoutIsSuccess = true,
                     IsCompleteDelegate= delegate{return BrawlerPlayer.IsEXGamer; },
-                    TimeToComplete = -1,
+                    TimeToComplete = 10,
                     UpdateDelegate =
                     delegate
                     {

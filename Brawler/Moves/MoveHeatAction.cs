@@ -77,7 +77,7 @@ namespace Brawler
 
 
             HActRequestOptions opts = new HActRequestOptions();
-            opts.base_mtx.matrix = attacker.Character.GetPosture().GetRootMatrix();
+            opts.base_mtx.matrix = attacker.Character.GetMatrix();
             opts.id = heatAction;
             opts.is_force_play = true;
 

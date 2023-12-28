@@ -157,12 +157,12 @@ namespace Brawler
         
         private static bool EXHeatShouldTransform()
         {
-            if (BrawlerBattleManager.IsEncounter)
+            if (BattleProperty.BattleConfigID == 2)
                 return true;
 
             CharacterID kasugaModel = BrawlerBattleManager.KasugaChara.Attributes.chara_id;
 
-            if ((uint)kasugaModel != 0xCE4 && (uint)kasugaModel != 0x3BB7)
+            if ((uint)kasugaModel != 0x3CE4 && (uint)kasugaModel != 0x3BB7)
                 return false;
 
             return true;
@@ -170,8 +170,6 @@ namespace Brawler
 
         public static void OnEXGamerON(bool immediate)
         {
-            DragonEngine.Log("is ex cancel: " + immediate);
-
             m_bgmID = SoundManager.GetBGMSeID();
             m_bgmTime = SoundManager.GetBGMPlaytimeSec();
 
@@ -340,6 +338,7 @@ namespace Brawler
             HActIsPlaying = AuthManager.PlayingScene.IsValid() || GameVarManager.GetValueBool(GameVarID.is_hact);  //HActManager.IsPlaying();
 
             //Core updates outside of combat
+            HActLifeGaugeManager.Update();
             BrawlerGaugeRestore.Update();
             TutorialManager.Update();
 
@@ -349,39 +348,6 @@ namespace Brawler
                 StartAura();
 
             TalkParamID curHactID = AuthManager.PlayingScene.Get().TalkParamID;
-
-            if (BattleTurnManager.CurrentPhase == BattleTurnManager.TurnPhase.Start)
-            {
-                /*
-                if (curHactID == TalkParamID.yazawa_btlst_eb_zako_no_trans ||
-                    curHactID == TalkParamID.BTLst_eb_zako_test || curHactID == TalkParamID.test_yazawa_enc_st)
-                    IsEncounter = true;
-                */
-
-                /*
-                if (IsEncounter)
-                {
-                    new DETask(delegate { return !HActManager.IsPlaying(); },
-                    (
-                        delegate
-                        {
-                            Fighter starter = FighterManager.GetAllEnemies()[0];
-
-                            HActRequestOptions opts = new HActRequestOptions();
-                            opts.base_mtx.matrix = starter.Character.GetPosture().GetRootMatrix();
-
-                            opts.id = (TalkParamID)12882;
-                            opts.is_force_play = true;
-
-                            opts.Register(HActReplaceID.hu_enemy_00, starter.Character.UID);
-                            opts.Register(HActReplaceID.hu_player1, new EntityHandle<CharacterBase>(KasugaChara.UID));
-                            opts.RegisterWeapon(AuthAssetReplaceID.we_player_r, Kasuga.GetWeapon(AttachmentCombinationID.right_weapon));
-                            BattleTurnManager.RequestHActEvent(opts);
-                        }
-                    ));
-                }
-                */
-            }
 
             //Updates that concern combat start from here
             if (!Kasuga.IsValid())

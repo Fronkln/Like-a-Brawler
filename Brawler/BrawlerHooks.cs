@@ -252,6 +252,8 @@ namespace Brawler
 
             MinHookHelper.enableAllHook();
 
+            m_twerkAddr = DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? C5 FC 10 44 24 40 C4 C1 7C 11 87 40 01 00 00");
+
             BrawlerBattleManager.OnBattleStart += OnBattleStart;
             BrawlerBattleManager.OnBattleEnd += OnBattleEnd;
         }
@@ -261,7 +263,6 @@ namespace Brawler
         private static byte[] m_cameraTwerkBits = new byte[5];
         public static void OnBattleStart()
         {
-            m_twerkAddr = DragonEngineLibrary.Unsafe.CPP.PatternSearch("E8 ? ? ? ? C5 FC 10 44 24 40 C4 C1 7C 11 87 40 01 00 00");
             Marshal.Copy(m_twerkAddr, m_cameraTwerkBits, 0, 5);
 
             //CAMERA FREE: DISABLE CAMERA TWERKING ON BATTLE/CAMERA LINK OUT

@@ -555,7 +555,7 @@ namespace Brawler
         public void DoHAct(TalkParamID hact, Vector4 position, params Fighter[] allies)
         {
             HActRequestOptions opts = new HActRequestOptions();
-            opts.base_mtx.matrix = Chara.Get().GetPosture().GetRootMatrix();
+            opts.base_mtx.matrix = Chara.Get().GetMatrix();
 
             if (position != Vector4.zero)
                 opts.base_mtx.matrix.m_vm3 = position;
@@ -619,6 +619,11 @@ namespace Brawler
         public virtual Vector2 GetBlockRange()
         {
             return new Vector2(3, 6);
+        }
+
+        public virtual bool CanDieOnHAct()
+        {
+            return true;
         }
     }
 }

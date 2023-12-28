@@ -28,6 +28,7 @@ namespace Brawler
             {
                 //release
                 m_uiRoot.Release();
+                m_uiRoot.Handle = 0;
             }
 
             m_uiRoot = UI.Create(355, 0); //boss_life_gauge leftover from JE
@@ -63,11 +64,21 @@ namespace Brawler
         }
 
 
+        public static void Update()
+        {
+            if(m_gaugeRoot.Handle != 0)
+                if(!BrawlerBattleManager.KasugaChara.IsValid() || BrawlerBattleManager.Kasuga.IsDead())
+                {
+                    m_uiRoot.Release();
+                    m_uiRoot.Handle = 0;
+                }    
+        }
+
         private static void OnHActStart()
         {
             BattleTurnManager.TurnPhase phase = BattleTurnManager.CurrentPhase;
 
-            if (BrawlerBattleManager.EnemiesNearest.Length <= 0 || phase <= BattleTurnManager.TurnPhase.Start)
+            if (BrawlerBattleManager.EnemiesNearest.Length <= 0 || phase <= BattleTurnManager.TurnPhase.Start || !BrawlerBattleManager.CurrentHActIsY7B)
             {
                 SetVisible(false);
                 return;

@@ -42,7 +42,7 @@ namespace Brawler
                 if (!m_performedHacts.Contains((TalkParamID)13013))
                     if (DistanceToPlayer < 5)
                         if (new Random().Next(0, 101) <= 65)
-                            DoHAct((TalkParamID)13013, BrawlerBattleManager.KasugaChara.GetPosture().GetRootMatrix());
+                            DoHAct((TalkParamID)13013, BrawlerBattleManager.KasugaChara.GetMatrix());
             }
 
         }
@@ -93,9 +93,14 @@ namespace Brawler
             Character.GetStatus().GetBattleAI().SwitchEnemyIDSet(560);
 
 
-            DoHAct((TalkParamID)13000, BrawlerBattleManager.KasugaChara.GetPosture().GetRootMatrix());
+            DoHAct((TalkParamID)13000, BrawlerBattleManager.KasugaChara.GetMatrix());
 
             DragonEngine.Log("entered phase 2");
+        }
+
+        public override bool CanDieOnHAct()
+        {
+            return false;
         }
     }
 }

@@ -83,16 +83,16 @@ namespace Brawler
             {
 
                 ModInput.InputUpdate();
+                Thread.Sleep(10);
 #if DEBUG
                 Debug.InputUpdate();
 #endif
-                if (DebugNoUpdate)
-                    continue;
             }
         }
 
         private static void GameUpdate()
         {
+
             IsGamePaused = GameVarManager.GetValueBool(GameVarID.is_pause);
             IsGameFocused = ApplicationIsActivated();
 
@@ -169,11 +169,8 @@ namespace Brawler
 
         public override void OnModInit()
         {
-
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-
-            DragonEngine.Initialize();
 
             Assembly assmb = Assembly.GetExecutingAssembly();
             ModPath = Path.GetDirectoryName(assmb.Location);
@@ -194,28 +191,26 @@ namespace Brawler
             AuthConditionManager.Init();
             AuthCustomNodeManager.Init();
 
+
             BattleMusic.Init();
             BrawlerPlayer.Init();
             HeatActionManager.Init();
             HActLifeGaugeManager.Init();
             RevelationManager.Init();
             WeaponManager.InitWeaponMovesets();
+            TutorialManager.Init();
 
             DragonEngine.RegisterJob(GameUpdate, DEJob.Update);
-
             FighterManager.ForceBrawlerMode(true);
 
             BrawlerHooks.Init();
 
-#if DEBUG
-            DragonEngineLibrary.Advanced.ImGui.RegisterUIUpdate(DrawMenu);
-#endif
             DragonEngine.RegisterJob(AttackSimulator.PlayerInstance.AttackDrawUpdate, DEJob.Draw, true);
 
+            //Problematic, rose temperatures from 70 to 85???
             Thread thread = new Thread(InputThread);
             thread.Start();
         }
-
 
         public static YFC ReadYFC(string name)
         {

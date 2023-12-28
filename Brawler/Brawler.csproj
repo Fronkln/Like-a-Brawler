@@ -117,6 +117,7 @@
     <Compile Include="BrawlerBattleTransition.cs" />
     <Compile Include="BrawlerConfig.cs" />
     <Compile Include="BrawlerSaveData.cs" />
+    <Compile Include="Enemy\Boss\EnemyAIAoki.cs" />
     <Compile Include="Enemy\Boss\EnemyAIAoki2.cs" />
     <Compile Include="Enemy\Boss\EnemyAIBossGenericHitman.cs" />
     <Compile Include="Enemy\Boss\EnemyAIBossGenericWPG.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Enemy\Boss\EnemyAIHan.cs" />
     <Compile Include="Enemy\Boss\EnemyAIMabuchi.cs" />
     <Compile Include="Enemy\Boss\EnemyAINanba.cs" />
+    <Compile Include="Enemy\Boss\EnemyAIBossSojimaru.cs" />
     <Compile Include="Enemy\Boss\EnemyAITendo.cs" />
     <Compile Include="Enemy\Boss\EnemyAITiger.cs" />
     <Compile Include="Enemy\EnemyAIHook.cs" />

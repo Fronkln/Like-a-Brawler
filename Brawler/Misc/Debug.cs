@@ -13,6 +13,7 @@ namespace Brawler
         public static bool HyperArmor = false;
         public static void InputUpdate()
         {
+#if DEBUG
             if (DragonEngine.IsKeyDown(VirtualKey.Numpad7))
             {
                 bool toggle = !FighterManager.IsBrawlerMode();
@@ -139,6 +140,7 @@ namespace Brawler
                     }
                 }
             }
+#endif
         }
     }
 }

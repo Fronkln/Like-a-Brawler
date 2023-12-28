@@ -12,6 +12,7 @@ namespace YazawaCommand
         IsDown,
         IsGettingUp,
         FacingPlayer,
-        PlayerFacing
+        PlayerFacing,
+        Distance
     }
 }

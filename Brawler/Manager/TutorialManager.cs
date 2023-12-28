@@ -31,13 +31,28 @@ namespace Brawler
 
         public static TutorialSegment Current { get { return m_tutorialSegments[m_curSegment]; } }
 
-        public static void Initialize(TutorialSegment[] segments)
+        public static void Init()
         {
-            new DETask(delegate { return !HActManager.IsPlaying() && BattleTurnManager.CurrentPhase == BattleTurnManager.TurnPhase.Action; }, delegate {  OnCombatStart(segments); });
+            BrawlerBattleManager.OnBattleEnd += OnCombatEnd;
+        }
+
+        public static void InitializeTutorial(TutorialSegment[] segments)
+        {
+            new DETask(delegate { return !HActManager.IsPlaying() && BattleTurnManager.CurrentPhase == BattleTurnManager.TurnPhase.Action && !RevelationManager.IsQueue(); }, delegate {  OnCombatStart(segments); });
         }
 
         private static void OnCombatStart(TutorialSegment[] segments)
         {
+            if (m_pendingInit || Active)
+                return;
+
+            if(m_tutorialHandle.Handle != 0)
+            {
+                m_tutorialHandle.Release();
+                m_tutorialHandle.Handle = 0;
+            }
+                
+
             m_tutorialHandle = UI.Create(201, 1);
             m_textHandle = m_tutorialHandle.GetChild(0);
             m_timerHandle = m_tutorialHandle.GetChild(1);
@@ -52,6 +67,15 @@ namespace Brawler
             m_tutorialSegments = segments;
             //m_curSegment = 0;
             //new DETaskTime(1f, delegate { Active = true; StartSegment(0); });
+        }
+
+        private static void OnCombatEnd()
+        {
+            if (m_tutorialHandle.Handle != 0)
+            {
+                m_tutorialHandle.Release();
+                m_tutorialHandle.Handle = 0;
+            }
         }
 
         public static void SetVisible(bool visible)

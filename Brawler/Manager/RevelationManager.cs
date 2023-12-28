@@ -142,7 +142,7 @@ namespace Brawler
             opts.can_skip = false;
             opts.id = hactID;
             opts.is_force_play = true;
-            opts.base_mtx.matrix = BrawlerBattleManager.KasugaChara.GetPosture().GetRootMatrix();
+            opts.base_mtx.matrix = BrawlerBattleManager.KasugaChara.GetMatrix();
 
             opts.Register(HActReplaceID.hu_player, BrawlerBattleManager.KasugaChara);
             HActManager.RequestHActProc(opts);

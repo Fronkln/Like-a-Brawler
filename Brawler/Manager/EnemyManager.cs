@@ -262,6 +262,10 @@ namespace Brawler
             {
                 switch (enemy.Character.Attributes.soldier_data_id)
                 {
+                    case CharacterNPCSoldierPersonalDataID.yazawa_btl15_0030_000_1:
+                        ai = new EnemyAIAoki();
+                        break;
+
                     case CharacterNPCSoldierPersonalDataID.yazawa_btl15_0030_000_9:
                         ai = new EnemyAIAoki2();
                         break;
@@ -287,6 +291,10 @@ namespace Brawler
                 {
                     default:
                         ai = new EnemyAIBoss();
+                        break;
+
+                    case BattleControlType.boss_clean_robot:
+                        ai = new EnemyAIBossSojimaru();
                         break;
 
                     case BattleControlType.hitman:

@@ -86,70 +86,21 @@ namespace Brawler
                     BrawlerBattleManager.CurrentHActIsY7B = false; 
                     m_dontAllowLinkoutMovement = false; 
                 };
-
-            /*
-            HeatAction[] unarmedAttacks = new HeatAction[]
-            {
-                new HeatAction((TalkParamID)12885, HeatActionCondition.FighterDown, 5, 0, 1, 5f), //y0 brawler getup attack
-                new HeatAction((TalkParamID)12892, HeatActionCondition.EnemyStandingUp, 5, 0, 1, 3.5f), //y5 enemy gets up heat attack
-                new HeatAction((TalkParamID)12905, HeatActionCondition.EnemyGrabbed | HeatActionCondition.FighterHealthNotCritical, 5, 0, 1, 3.5f), //y3 shimano throw
-                new HeatAction((TalkParamID)12906, HeatActionCondition.EnemyGrabbed | HeatActionCondition.FighterCriticalHealth, 5, 0, 1, 3.5f), //Custom HAct: Essence of Last Stand
-                new HeatAction((TalkParamID)12895, HeatActionCondition.EnemyDown | HeatActionCondition.FighterCriticalHealth, 2, 0, 1, 2f), //kaito tower bridge
-                new HeatAction((TalkParamID)12914, HeatActionCondition.HeatFull | HeatActionCondition.EnemyNotDown , 2, 0, 1, 5f), //Kurohyou kick balls
-                new HeatAction((TalkParamID)12904, HeatActionCondition.EnemyDown | HeatActionCondition.EnemyHealthNotCritical, 2, 0, 1, 2f) //y5 downed combo
-            };
-
-            HeatAction[] wepAAttacks = new HeatAction[]
-            {
-                new HeatAction(TalkParamID.jh23760_buki_n, HeatActionCondition.EnemyNotDown, 1, 0, 1, 2f) //slam weapon on face
-            };
-
-            HeatAction[] wepABatonAttacks = new HeatAction[]
-            {
-                new HeatAction((TalkParamID)12891, HeatActionCondition.EnemyNotDown, 1, 0, 1, 2f) //bonk head with baton
-            };
-
-            HeatAction[] wepCAttacks = new HeatAction[]
-{
-                new HeatAction((TalkParamID)12893, HeatActionCondition.EnemyNotDown, 1, 0, 1, 2f) //slam weapon on face
-};
-
-            HeatAction[] wepDAttacks = new HeatAction[]
-            {
-                new HeatAction(TalkParamID.YH1440_ich_bat_atk, HeatActionCondition.EnemyNotDown | HeatActionCondition.FighterCriticalHealth, 3, 0, 1, 3.5f), //repurposed hero kiwami bat
-                new HeatAction((TalkParamID)2530, HeatActionCondition.EnemyNotDown | HeatActionCondition.FighterHealthNotCritical, 1, 0, 1, 3.5f), //bat heat action
-            };
-
-            HeatAction[] wepGAttacks = new HeatAction[]
-            {
-                new HeatAction(TalkParamID.jh27320_buki_g_oi, HeatActionCondition.EnemyNotDown, 1, 0, 1, 2f) //knocked down hammer attack
-            };
-
-            HeatAction[] wepYAttacks = new HeatAction[]
-            {
-                new HeatAction((TalkParamID)12887, HeatActionCondition.EnemyNotDown, 1, 0, 1, 2f) //unload clip on enemy
-            };
-
-            //0 = default
-            HeatActionsList.Add(AssetArmsCategoryID.invalid, new Dictionary<uint, HeatAction[]>() { [0] = unarmedAttacks });
-            HeatActionsList.Add(AssetArmsCategoryID.A, new Dictionary<uint, HeatAction[]>() { [0] = wepAAttacks, [3] = wepABatonAttacks });
-            HeatActionsList.Add(AssetArmsCategoryID.C, new Dictionary<uint, HeatAction[]>() { [0] = wepCAttacks });
-            HeatActionsList.Add(AssetArmsCategoryID.D, new Dictionary<uint, HeatAction[]>() { [0] = wepDAttacks });
-            HeatActionsList.Add(AssetArmsCategoryID.G, new Dictionary<uint, HeatAction[]>() { [0] = wepGAttacks });
-            HeatActionsList.Add(AssetArmsCategoryID.Y, new Dictionary<uint, HeatAction[]>() { [0] = wepYAttacks });
-            */
         }
 
+
+        //Very sensitive, the slightest change could make heat action damage ass on early
+        //And batshit broken on late game
         public static void CalcHActDamageMultiplier()
         {
             uint playerLevel = Player.GetLevel(Player.ID.kasuga);
             float mult = 1;
             int numIncrease = 0;
 
-            for (int i = 7; i < 61 && i < playerLevel; i += 3)
+            for (int i = 7; i < 61 && i < playerLevel; i += 4)
                 numIncrease++;
 
-            mult = (float)Math.Pow(1.28f, numIncrease);
+            mult = (float)Math.Pow(1.255f, numIncrease);
             DamageScale = mult;
 
             DragonEngine.Log("Multiplier: " + mult + "\n20 damage with multiplier: " + 20 * mult);
@@ -385,7 +336,7 @@ namespace Brawler
                     {
 
                         if (usePerformerPosition)
-                            opts.base_mtx.matrix = info.Performer.Character.GetPosture().GetRootMatrix();
+                            opts.base_mtx.matrix = info.Performer.Character.GetMatrix();
                         else
                         {
                             opts.base_mtx.matrix.Position = hactPos;

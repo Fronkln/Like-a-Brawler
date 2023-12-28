@@ -71,7 +71,7 @@ namespace Brawler
             if (GetPhase() == 1)
             {
                 //y7b1190_saw_wpa_ich_ded
-                DoHAct((TalkParamID)12936, Chara.Get().Transform.Position);
+                DoHAct((TalkParamID)12956, Chara.Get().Transform.Position);
                 return true;
             }
 

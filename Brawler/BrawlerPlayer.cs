@@ -53,6 +53,7 @@ namespace Brawler
             //EXMovesets[RPGJobID.kasuga_freeter] = Mod.ReadYFC("kasuga_unarmed.yfc");
             EXMovesets[RPGJobID.kasuga_braver] = Mod.ReadYFC("extreme_heat/kasuga_hero.yfc");
             EXMovesets[RPGJobID.man_01] = Mod.ReadYFC("extreme_heat/kasuga_bodyguard.yfc");
+            EXMovesets[RPGJobID.man_02] = Mod.ReadYFC("extreme_heat/kasuga_host.yfc");
             EXMovesets[RPGJobID.man_kaitaiya] = Mod.ReadYFC("extreme_heat/kasuga_foreman.yfc");
             EXMovesets[RPGJobID.man_05] = Mod.ReadYFC("extreme_heat/kasuga_breaker.yfc");
             EXMovesets[RPGJobID.man_06] = Mod.ReadYFC("extreme_heat/kasuga_enforcer.yfc");
@@ -331,7 +332,6 @@ namespace Brawler
                     if (!Info.IsSync)
                     AttackSimulator.PlayerInstance.Stop(); //attack cancel
 
-                DragonEngine.Log(isExCancel);
 
                 if (IsEXGamer)
                     BrawlerBattleManager.OnEXGamerON(isExCancel);
@@ -556,27 +556,21 @@ namespace Brawler
 
             Fighter attacker = dmg.Attacker.Get().GetFighter();
 
+            /*
             if (!CanCounterAttack(dmg))
             {
+
+                return false;
+            }
+            */
+
+
+            bool counterTransit = AttackSimulator.PlayerInstance.TransitCounter(attacker, dmg);
+
+
+            if(!counterTransit)
                 if (WouldDie(dmg))
                 {
-                    /*
-                    HActRequestOptions opts = new HActRequestOptions()
-                    {
-                        id = TalkParamID.yh1630_sae_sosei,
-                        is_force_play = true,
-                    };
-
-                    //test revive
-                    opts.base_mtx.matrix = DragonEngine.GetHumanPlayer().GetPosture().GetRootMatrix();
-                    opts.Register(HActReplaceID.hu_player, BrawlerBattleManager.KasugaChara.UID);
-                    BattleTurnManager.RequestHActEvent(opts);
-                    BrawlerBattleManager.Kasuga.GetStatus().CurrentHP = BrawlerBattleManager.Kasuga.GetStatus().MaxHP;
-
-
-                    return true;
-                    */
-
                     bool specialFinish = EnemyManager.GetAI(attacker).DoFinisher(dmg);
 
                     if (specialFinish)
@@ -585,11 +579,6 @@ namespace Brawler
                         return false;
                 }
 
-                return false;
-            }
-
-
-            bool counterTransit = AttackSimulator.PlayerInstance.TransitCounter(attacker, dmg);
             return counterTransit;
         }
 
@@ -622,42 +611,6 @@ namespace Brawler
 
             if (ai == null)
                 return;
-
-            /*
-            int count = BrawlerBattleManager.Enemies.Length;
-            DragonEngine.Log(count + " " + dmg.Damage  + " " + enemy.GetStatus().CurrentHP);
-            
-
-            if (count <= 2)
-            if (ai.WouldDieToDamage(dmg))
-            {
-
-                 Character fighter = FighterManager.GenerateEnemyFighter(new PoseInfo(BrawlerBattleManager.KasugaChara.GetPosCenter() + -BrawlerBattleManager.KasugaChara.Transform.forwardDirection, 0), 15603, (CharacterID)0x67);
-
-
-
-                HActRequestOptions opts = new HActRequestOptions()
-                {
-                    id = (TalkParamID)12882,
-                    is_force_play = true,
-                };
-
-                //test revive
-                opts.base_mtx.matrix = DragonEngine.GetHumanPlayer().GetPosture().GetRootMatrix();
-                opts.Register(HActReplaceID.hu_player, BrawlerBattleManager.KasugaChara.UID);
-                opts.Register(HActReplaceID.hu_enemy_00, fighter);
-                opts.RegisterWeapon(AuthAssetReplaceID.we_enemy_00_r, fighter.GetFighter().GetWeapon(AttachmentCombinationID.right_weapon));
-                BattleTurnManager.RequestHActEvent(opts);
-
-               BrawlerBattleTransition.DontAllowEnd = true;
-
-                    new DETaskList
-                        (
-                            new DETask(delegate { return BrawlerBattleManager.HActIsPlaying; }, null, false),
-                            new DETask(delegate { return !BrawlerBattleManager.HActIsPlaying; }, delegate { BrawlerBattleTransition.DontAllowEnd = false; }, false)
-                        );
-            }
-            */
         }
 
         private static void OnHitEnemyWithWeapon(ECAssetArmsSingle arms, Fighter enemy, BattleDamageInfoSafe dmg)
