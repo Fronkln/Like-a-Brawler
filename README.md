@@ -1,7 +1,5 @@
 # Like a Brawler
- Source code for Like a Brawler Yakuza mod, reference only for now. Not compilable. Will be turned into a fully functional repository with the release of the mod.
-
-<br>
+ Source code for Like a Brawler Yakuza mod.
 <br>
 <b>Brawler</b> - Gameplay Code
 <br>
